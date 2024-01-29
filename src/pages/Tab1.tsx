@@ -26,7 +26,7 @@ const Tab1: React.FC = () => {
     <IonContent fullscreen>
       <IonHeader collapse="condense">
         <IonToolbar>
-          <IonTitle size="large">Tab 2</IonTitle>
+          <IonTitle size="large">Tab 1</IonTitle>
         </IonToolbar>
       </IonHeader>
       {/* Rest of your existing UI... */}
