@@ -1,22 +1,27 @@
 import React, { useState } from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonButton, IonItem } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonButton, IonItem, IonLabel, IonSegment, IonSegmentButton } from '@ionic/react';
 import pushNumber from '../components/firebasePull'; 
 import './Tab2.css';
-import { IonLabel, IonSegment, IonSegmentButton } from '@ionic/react';
-
 
 const Tab2: React.FC = () => {
   const [numberInput, setNumberInput] = useState<string>('');
+  const [transactionType, setTransactionType] = useState<string>('deposit'); // State to track transaction type
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const number = parseFloat(numberInput);
-    if (!isNaN(number)) {
-        await pushNumber(number);
-        setNumberInput('');
+
+    // Check transaction type and number validity
+    if (transactionType === 'deposit' && number >= 0) {
+      await pushNumber(number);
+      setNumberInput('');
+    } else if (transactionType === 'withdraw' && number < 0) {
+      await pushNumber(number);
+      setNumberInput('');
+    } else {
+      alert('Please enter a valid number for the selected transaction type.');
     }
-};
+  };
 
   return (
     <IonPage>
@@ -26,37 +31,29 @@ const Tab2: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 2</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer name="Tab 2 page" />
-
-        {/* Form for submitting a number */}
+      <>
+          <IonSegment value={transactionType} onIonChange={e => setTransactionType(String(e.detail.value))}>
+            <IonSegmentButton value="deposit">
+              <IonLabel>Deposit</IonLabel>
+            </IonSegmentButton>
+            <IonSegmentButton value="withdraw">
+              <IonLabel>Withdraw</IonLabel>
+            </IonSegmentButton>
+          </IonSegment>
+        </>
+        {/* Other content, if any */}
         <form onSubmit={handleSubmit}>
           <IonItem>
             <IonInput 
-              type="text" // keep this as "text" to properly handle float inputs
+              type="text" 
               value={numberInput} 
               placeholder="Enter a number" 
               onIonChange={e => setNumberInput(e.detail.value!)} 
-              
             />
           </IonItem>
           <IonButton expand="block" type="submit">Submit Number</IonButton>
         </form>
-        <>
-      <IonSegment value="default">
-        <IonSegmentButton value="default">
-          <IonLabel>Deposit</IonLabel>
-        </IonSegmentButton>
-        <IonSegmentButton value="segment">
-          <IonLabel>Withdraw</IonLabel>
-        </IonSegmentButton>
-      </IonSegment>
-
-    </>
+   
       </IonContent>
     </IonPage>
   );
