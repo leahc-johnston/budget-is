@@ -4,6 +4,8 @@ import './Tab1.css';
 import { fetchBalances} from '../components/firebasePull';
 import { useState, useEffect } from 'react';
 
+
+
 const Tab1: React.FC = () => {
   const [numbers, setNumbers] = useState<number[]>([]);
 
@@ -11,6 +13,7 @@ const Tab1: React.FC = () => {
     const fetchAndSetNumbers = async () => {
       const fetchedNumbers = await fetchBalances();
       setNumbers(fetchedNumbers);
+     
     };
 
     fetchAndSetNumbers();
@@ -37,6 +40,7 @@ const Tab1: React.FC = () => {
         <ul>
           {numbers.map((number, index) => (
             <li key={index}>{number}</li>
+            
           ))}
         </ul>
       </div>

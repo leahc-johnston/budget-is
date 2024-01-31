@@ -1,7 +1,6 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { Firestore, getFirestore } from "firebase/firestore";
 
-// Define a type for your environment variables if they are not already globally defined
 type FirebaseConfig = {
   apiKey: string | undefined;
   authDomain: string | undefined;

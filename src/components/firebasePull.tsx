@@ -2,15 +2,22 @@ import { collection, getDocs, query, where, Firestore } from "@firebase/firestor
 import { firestore } from "../components/firebase";
 import { addDoc } from "firebase/firestore";
 
-// Assuming the structure of each document in your Firestore collection
+
 type test = {
     value: number;
 };
 
+
+
+export type BalanceData = {
+    balance: number;
+};
+
+
 // Function to retrieve numbers from Firestore
 const fetchBalances = async (): Promise<number[]> => {
     const testCollection = collection(firestore, "test");
-    const q = query(testCollection, where("balance", ">", 0)); // Adjust the query as needed
+    const q = query(testCollection, where("balance", ">", 0)); // Fetching from "test collection"
 
     try {
         const querySnapshot = await getDocs(q);
@@ -22,19 +29,18 @@ const fetchBalances = async (): Promise<number[]> => {
     }
 };
 
-
 export { fetchBalances };
 
-// Existing handleSubmit function (if needed, keep it as is)
+
 type TestData = {
-    // Define the structure of your test data here
+    // Define structure later
 };
 
 const handleSubmit = async (testdata: TestData) => {
-    const ref = collection(firestore, "test_data");
+    const ref = collection(firestore, "test");
 
     let data = {
-        testData: testdata
+        balance: testdata
     };
 
     try {
