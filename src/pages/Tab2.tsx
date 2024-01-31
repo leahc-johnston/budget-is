@@ -3,6 +3,8 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonButt
 import ExploreContainer from '../components/ExploreContainer';
 import pushNumber from '../components/firebasePull'; 
 import './Tab2.css';
+import { IonLabel, IonSegment, IonSegmentButton } from '@ionic/react';
+
 
 const Tab2: React.FC = () => {
   const [numberInput, setNumberInput] = useState<string>('');
@@ -44,6 +46,17 @@ const Tab2: React.FC = () => {
           </IonItem>
           <IonButton expand="block" type="submit">Submit Number</IonButton>
         </form>
+        <>
+      <IonSegment value="default">
+        <IonSegmentButton value="default">
+          <IonLabel>Deposit</IonLabel>
+        </IonSegmentButton>
+        <IonSegmentButton value="segment">
+          <IonLabel>Withdraw</IonLabel>
+        </IonSegmentButton>
+      </IonSegment>
+
+    </>
       </IonContent>
     </IonPage>
   );
