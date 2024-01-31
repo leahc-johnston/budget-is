@@ -46,17 +46,6 @@ const Tab2: React.FC = () => {
           </IonItem>
           <IonButton expand="block" type="submit">Submit Number</IonButton>
         </form>
-        <>
-      <IonSegment value="default">
-        <IonSegmentButton value="default">
-          <IonLabel>Deposit</IonLabel>
-        </IonSegmentButton>
-        <IonSegmentButton value="segment">
-          <IonLabel>Withdraw</IonLabel>
-        </IonSegmentButton>
-      </IonSegment>
-
-    </>
       </IonContent>
     </IonPage>
   );
