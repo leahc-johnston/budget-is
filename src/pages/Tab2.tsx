@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonButton, IonItem, IonLabel, IonSegment, IonSegmentButton } from '@ionic/react';
 import pushNumber from '../components/firebasePull'; 
 import './Tab2.css';
+import { fetchBalances} from '../components/firebasePull';
+
 
 const Tab2: React.FC = () => {
   const [numberInput, setNumberInput] = useState<string>('');
   const [transactionType, setTransactionType] = useState<string>('deposit'); // State to track transaction type
+
+  const [numbers, setNumbers] = useState<number[]>([]);
+  useEffect(() => {
+
+    const fetchAndSetNumbers = async () => {
+      const fetchedNumbers = await fetchBalances();
+      setNumbers(fetchedNumbers);   
+    };  
+    fetchAndSetNumbers();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,8 +36,9 @@ const Tab2: React.FC = () => {
       } else {
       alert('Please enter a valid number for the selected transaction type.');
     }
-  };
+};
 
+  let status = Boolean;
   return (
     <IonPage>
       <IonHeader>
@@ -56,7 +69,15 @@ const Tab2: React.FC = () => {
           </IonItem>
           <IonButton expand="block" type="submit">Submit Number</IonButton>
         </form>
-   
+        <>
+        <ul>
+          {numbers.map((number, index) => (
+            <li key={index}>{number}</li>
+            
+          ))}
+        </ul>
+
+    </>
       </IonContent>
     </IonPage>
   );
