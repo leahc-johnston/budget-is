@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 
 
 const Tab1: React.FC = () => {
-  const [numbers, setNumbers] = useState<number[]>([]);
+/*   const [numbers, setNumbers] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchAndSetNumbers = async () => {
@@ -17,7 +17,7 @@ const Tab1: React.FC = () => {
     };
 
     fetchAndSetNumbers();
-  }, []);
+  }, []); */
   
   return (
     <IonPage>
@@ -37,12 +37,12 @@ const Tab1: React.FC = () => {
       {/* Display the retrieved numbers */}
       <div>
         <h2>Fetched Numbers:</h2>
-        <ul>
+{/*         <ul>
           {numbers.map((number, index) => (
             <li key={index}>{number}</li>
             
           ))}
-        </ul>
+        </ul> */}
       </div>
     </IonContent>
   </IonPage>
