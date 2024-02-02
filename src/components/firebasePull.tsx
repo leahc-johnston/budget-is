@@ -17,10 +17,9 @@ export type BalanceData = {
 // Function to retrieve numbers from Firestore
 const fetchBalances = async (): Promise<number[]> => {
     const testCollection = collection(firestore, "test");
-    const q = query(testCollection, where("balance", ">", 0)); // Fetching from "test collection"
 
     try {
-        const querySnapshot = await getDocs(q);
+        const querySnapshot = await getDocs(testCollection);
         const balances = querySnapshot.docs.map(doc => doc.data().balance as number);
         return balances;
     } catch (err) {
