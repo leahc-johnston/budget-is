@@ -33,9 +33,7 @@ const Tab2: React.FC = () => {
     }else if(transactionType === 'withdraw' && number > 0) {
       await pushNumber(number *-1);
       setNumberInput('');
-      } else {
-      alert('Please enter a valid number for the selected transaction type.');
-    }
+      }
 };
 
   let status = Boolean;
