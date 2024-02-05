@@ -19,7 +19,7 @@ const Tab1: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab 2</IonTitle> {/* If this is Tab1, consider renaming the title to "Tab 1" for consistency */}
+          <IonTitle size="large">Tab 1</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
