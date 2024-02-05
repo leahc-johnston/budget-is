@@ -1,6 +1,6 @@
 import { collection, getDocs, query, where, Firestore } from "@firebase/firestore";
 import { firestore } from "../components/firebase";
-import { addDoc } from "firebase/firestore";
+import { addDoc, doc, updateDoc } from "firebase/firestore";
 
 
 type test = {
@@ -15,12 +15,15 @@ export type BalanceData = {
 
 
 // Function to retrieve numbers from Firestore
-const fetchBalances = async (): Promise<number[]> => {
+const fetchBalances = async (): Promise<{ id: string, balance: number }[]> => {
     const testCollection = collection(firestore, "test");
 
     try {
         const querySnapshot = await getDocs(testCollection);
-        const balances = querySnapshot.docs.map(doc => doc.data().balance as number);
+        const balances = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            balance: doc.data().balance as number
+        }));
         return balances;
     } catch (err) {
         console.error("Error fetching balances:", err);
@@ -30,6 +33,15 @@ const fetchBalances = async (): Promise<number[]> => {
 
 export { fetchBalances };
 
+export const pushNumber = async (entry: { balance: number }) => {
+    const ref = collection(firestore, "test"); // Adjust "test" to your actual collection name
+    try {
+        const docRef = await addDoc(ref, entry);
+        console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
+};
 
 const sumAllBalances = async (): Promise<number> => {
     const testCollection = collection(firestore, "test"); // Ensure collection name is correct
@@ -61,14 +73,21 @@ type TestData = {
 const handleSubmit = async (testdata: TestData) => {
     const ref = collection(firestore, "test");
 
-    let data = {
-        balance: testdata
-    };
-
     try {
-        await addDoc(ref, data);
+        await addDoc(ref, testdata); // Directly use testdata here
     } catch(err) {
-        console.error(err);
+        console.error("Error adding document:", err);
+    }
+};
+
+
+export const updateBalance = async (id: string, newBalance: number): Promise<void> => {
+    const docRef = doc(firestore, "test", id);
+    try {
+        await updateDoc(docRef, { balance: newBalance });
+        console.log("Balance updated successfully");
+    } catch (err) {
+        console.error("Error updating balance:", err);
     }
 };
 

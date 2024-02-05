@@ -6,17 +6,15 @@ import { Timestamp } from "@firebase/firestore";
 import { BalanceData } from './firebasePull';
 
 //push data function
-const pushNumber = async (number: number): Promise<void> => { 
-    const data = { balance: number };
-    
-    const ref = collection(firestore, "balance");
-
+const pushNumber = async ({ balance }: { balance: number }) => {
+    const ref = collection(firestore, "test"); // Ensure this is the correct collection name
     try {
-        await addDoc(ref, data);
-        console.log("Number added successfully");
+        await addDoc(ref, { balance });
+        console.log("Transaction added successfully");
     } catch (err) {
-        console.error("Error adding number to Firestore:", err);
+        console.error("Error adding transaction to Firestore:", err);
     }
+
 };
 
 export { pushNumber };
