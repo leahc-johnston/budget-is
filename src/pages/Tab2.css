@@ -1,0 +1,62 @@
+/* Main Color Values (HEX)*/
+
+/* Header 1 - Top of Every Tab/Tab Label*/
+
+/* Header 2 - Typical Header Usage Order*/
+
+/* Header 3 - Typical Header Usage Order*/
+
+/* Body/Paragraph does not exist. Scream.*/
+
+/* Deposite/Withdraw Segment */
+.depWith, .transactionBar {
+    background-color: #102A43;
+}
+.depWith:hover{
+    background-color: #173c5f;
+}
+
+/* Thats just a free floating ul, 
+its not in a box, just slap an ID on it*/
+
+.recentTransaction{
+    margin-right: 10% ;
+    margin-left: 10% ;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: #102A43;
+    box-shadow: 3px 3px 15px 3px rgb(2, 2, 12);
+}
+
+/* Transaction input box */
+.transactionInput{
+    background-color: #315070;
+    text-align: center;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+/* Submit Number button */
+.submitNum{
+    padding-left: 25%;
+    padding-right: 25%;
+}
+
+/* tab bar color stuff*/
+ion-tab-bar, ion-tab-button{
+    background-color: #102A43;
+   }
+
+ion-tab-button:hover{
+    background-color: #173c5f;
+}
+
+ion-icon{
+     color: #d7d8da;
+   }
+
+   ion-toolbar{
+    text-align: center;
+   }

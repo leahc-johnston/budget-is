@@ -43,16 +43,16 @@ const Tab2: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab 2</IonTitle>
+          <IonTitle>Add Transaction</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
       <>
-          <IonSegment value={transactionType} onIonChange={e => setTransactionType(String(e.detail.value))}>
-            <IonSegmentButton value="deposit">
+          <IonSegment value={transactionType} class="transactionBar" onIonChange={e => setTransactionType(String(e.detail.value))}>
+            <IonSegmentButton value="deposit" class="depWith">
               <IonLabel>Deposit</IonLabel>
             </IonSegmentButton>
-            <IonSegmentButton value="withdraw">
+            <IonSegmentButton value="withdraw" class="depWith">
               <IonLabel>Withdraw</IonLabel>
             </IonSegmentButton>
           </IonSegment>
@@ -61,16 +61,17 @@ const Tab2: React.FC = () => {
         <form onSubmit={handleSubmit}>
           <IonItem>
             <IonInput 
+              className='transactionInput'
               type="text" 
               value={numberInput} 
-              placeholder="Enter a number" 
+              placeholder="Enter Value of Transaction" 
               onIonChange={e => setNumberInput(e.detail.value!)} 
             />
           </IonItem>
-          <IonButton expand="block" type="submit">Submit Number</IonButton>
+          <IonButton expand="block" type="submit" className='submitNum'>Submit Number</IonButton>
         </form>
         <>
-        <ul>
+        <ul className="recentTransaction">
           {numbers.map((number, index) => (
             <li key={index}>{number}</li>
             
