@@ -14,17 +14,19 @@ export type BalanceData = {
 };
 
 
-// Function to retrieve numbers from Firestore
+// Function to retrieve numbers from Firebase
 const fetchBalances = async (): Promise<{ id: string, balance: number }[]> => {
-    const testCollection = collection(firestore, "test");
+    const testCollection = collection(firestore, "test"); //reference to 'test' collection
 
     try {
+        //fetch documents from firerstore
         const querySnapshot = await getDocs(testCollection);
+        //map through documents to get id and balance
         const balances = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            balance: doc.data().balance as number
+            id: doc.id, //document id
+            balance: doc.data().balance as number //balance value
         }));
-        return balances;
+        return balances; //returns array of balances
     } catch (err) {
         console.error("Error fetching balances:", err);
         return [];
@@ -33,9 +35,11 @@ const fetchBalances = async (): Promise<{ id: string, balance: number }[]> => {
 
 export { fetchBalances };
 
+//adds new balance to firebase
 export const pushNumber = async (entry: { balance: number }) => {
-    const ref = collection(firestore, "test"); // Adjust "test" to your actual collection name
+    const ref = collection(firestore, "test"); // test is collection name
     try {
+        //adds new document with entered data
         const docRef = await addDoc(ref, entry);
         console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -44,11 +48,13 @@ export const pushNumber = async (entry: { balance: number }) => {
 };
 
 const sumAllBalances = async (): Promise<number> => {
-    const testCollection = collection(firestore, "test"); // Ensure collection name is correct
+    const testCollection = collection(firestore, "test"); //test is name of collection
     let sum = 0;
 
     try {
+        //fetch all documents from collection
         const querySnapshot = await getDocs(testCollection);
+        //sums balance values
         querySnapshot.forEach(doc => {
             const balance = doc.data().balance;
             if (typeof balance === 'number') { // Make sure balance is a number
@@ -59,7 +65,7 @@ const sumAllBalances = async (): Promise<number> => {
         return sum;
     } catch (err) {
         console.error("Error fetching and summing balances:", err);
-        return 0; // Return 0 or handle the error as needed
+        return 0; 
     }
 };
 
