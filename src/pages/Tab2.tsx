@@ -46,18 +46,19 @@ const Tab2: React.FC = () => {
       const number = parseFloat(numberInput);
 
       //logic to handle deposit or withdraw
-      if (transactionType === 'deposit' || (transactionType === 'withdraw' && number <= 0 || number >=0)) { // Ensure correct logic for transaction type and number
-          if (editId) {
-            //updating exisiting transaction if editing
-              await updateBalance(editId, transactionType === 'withdraw' ? -Math.abs(number) : number);
-          } else {
+    if (transactionType === 'deposit' || (transactionType === 'withdraw' && number <= 0 || number >=0)) { // Ensure correct logic for transaction type and number
+        if (editId) {
+        //updating exisiting transaction if editing
+            await updateBalance(editId, transactionType === 'withdraw' ? -Math.abs(number) : number);
+        }else {
             // add new transacation if not editing
-              await pushNumber({ balance: transactionType === 'withdraw' ? -Math.abs(number) : number });
-          }
+            await pushNumber({balance: transactionType === 'withdraw' ? -Math.abs(number) : number});
+        }
           //resets fields after submission
           setNumberInput('');
           setEditId(null);
-      } else {
+      } 
+      else {
           alert('Please enter a valid number for the selected transaction type.');
       }
       window.location.reload();
@@ -83,6 +84,7 @@ const Tab2: React.FC = () => {
                     <IonItem>
                         <IonInput
                             type="number"
+                            step="any"
                             value={numberInput}
                             placeholder="Enter Value of Transaction"
                             onIonChange={e => setNumberInput(e.detail.value!)}

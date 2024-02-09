@@ -71,6 +71,54 @@ const sumAllBalances = async (): Promise<number> => {
 
 export { sumAllBalances };
 
+const sumWithdrawl = async (): Promise<number> => {
+    const testCollection = collection(firestore, "test"); //test is name of collection
+    let sumNeg = 0;
+
+    try {
+        //fetch all documents from collection
+        const querySnapshot = await getDocs(testCollection);
+        //sums balance values
+        querySnapshot.forEach(doc => {
+            const balance = doc.data().balance;
+            if (balance < 0) { // Make sure balance is a number
+                sumNeg += balance;
+            }
+        });
+        console.log("Total sum of balances:", sumNeg);
+        return sumNeg;
+    } catch (err) {
+        console.error("Error fetching and summing balances:", err);
+        return 0; 
+    }
+};
+
+export { sumWithdrawl };
+
+const sumDeposit = async (): Promise<number> => {
+    const testCollection = collection(firestore, "test"); //test is name of collection
+    let sumPos = 0;
+
+    try {
+        //fetch all documents from collection
+        const querySnapshot = await getDocs(testCollection);
+        //sums balance values
+        querySnapshot.forEach(doc => {
+            const balance = doc.data().balance;
+            if (balance >= 0) { // Make sure balance is a number
+                sumPos += balance;
+            }
+        });
+        console.log("Total sum of balances:", sumPos);
+        return sumPos;
+    } catch (err) {
+        console.error("Error fetching and summing balances:", err);
+        return 0; 
+    }
+};
+
+export { sumDeposit };
+
 
 type TestData = {
     // Define structure later
