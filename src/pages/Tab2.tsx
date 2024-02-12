@@ -85,7 +85,7 @@ const Tab2: React.FC = () => {
                         <IonInput
                             type="number"
                             step="any"
-                            step="any"
+                        
                             value={numberInput}
                             placeholder="Enter Value of Transaction"
                             onIonChange={e => setNumberInput(e.detail.value!)}
