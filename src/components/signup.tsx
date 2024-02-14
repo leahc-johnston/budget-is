@@ -5,6 +5,8 @@ import { auth, firestore } from "./firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useHistory } from "react-router-dom"; // Import useHistory
+import { colorFill } from "ionicons/icons";
+
 
 const Signup: React.FC = () => {
   const [email, setEmail] = useState("");

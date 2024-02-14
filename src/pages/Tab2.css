@@ -19,6 +19,10 @@
 /* Thats just a free floating ul, 
 its not in a box, just slap an ID on it*/
 
+.BEANS{
+    color: blueviolet;
+}
+
 .recentTransaction{
     margin-right: 10% ;
     margin-left: 10% ;

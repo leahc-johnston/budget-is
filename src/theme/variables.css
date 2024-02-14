@@ -83,7 +83,7 @@ http://ionicframework.com/docs/theming/ */
    */
 
   body {
-    --ion-color-primary: #afccff;
+    --ion-color-primary: #8595bc;
     --ion-color-primary-rgb: 175, 204, 255;
     --ion-color-primary-contrast: #000000;
     --ion-color-primary-contrast-rgb: 0, 0, 0;
@@ -189,12 +189,13 @@ http://ionicframework.com/docs/theming/ */
 
 
   /*
-   * Material Design Dark Theme
+   * Material Design Dark Theme important
    * -------------------------------------------
    */
 
+   /* BACKGROUND BULLSHIT */
   .md body {
-    --ion-background-color: #050D14;
+    --ion-background-color: #1c5d6b;
 	--ion-background-color-rgb: 5,13,20;
 
 	--ion-text-color: #fffffff;
