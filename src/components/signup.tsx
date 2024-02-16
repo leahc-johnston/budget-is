@@ -1,40 +1,35 @@
-// src/components/Signup.tsx
+// src/AuthPage.tsx
 
 import React, { useState } from "react";
 import { auth, firestore } from "./firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useHistory } from "react-router-dom"; // Import useHistory
-import { colorFill } from "ionicons/icons";
 
-
-const Signup: React.FC = () => {
+const AuthPage: React.FC = () => {
+  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const history = useHistory(); // Use useHistory for navigation
 
-  const createUserCollection = async (userId: string) => {
-    await setDoc(doc(firestore, "users", userId, "transactions", "initial"), {
-      message: "This is your first transaction!",
-    });
-  };
-
-  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      await createUserCollection(user.uid);
-      history.push("/dashboard"); // Use history.push to navigate
+      if (isLogin) {
+        await signInWithEmailAndPassword(auth, email, password);
+        console.log("Logged in successfully");
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+        console.log("Account created successfully");
+      }
     } catch (error) {
-      console.error("Error signing up:", error);
+      console.error("Authentication error:", error);
     }
   };
 
   return (
     <div>
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSignup}>
+      <h1>{isLogin ? "Login" : "Sign Up"}</h1>
+      <form onSubmit={handleAuth}>
         <input
           type="email"
           value={email}
@@ -49,10 +44,13 @@ const Signup: React.FC = () => {
           placeholder="Password"
           required
         />
-        <button type="submit">Sign Up</button>
+        <button type="submit">{isLogin ? "Login" : "Sign Up"}</button>
       </form>
+      <button onClick={() => setIsLogin(!isLogin)}>
+        {isLogin ? "Switch to Sign Up" : "Switch to Login"}
+      </button>
     </div>
   );
 };
 
-export default Signup;
+export default AuthPage;
