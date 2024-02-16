@@ -68,7 +68,7 @@ const Tab2: React.FC = () => {
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonTitle>Add Transaction</IonTitle>
+                    <IonTitle className='beautiful'>Add Transaction</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
@@ -80,20 +80,20 @@ const Tab2: React.FC = () => {
                         <IonLabel>Withdraw</IonLabel>
                     </IonSegmentButton>
                 </IonSegment>
-                <form onSubmit={handleSubmit}>
+                <form  onSubmit={handleSubmit} className='down'>
                     <IonItem>
-                        <IonInput
+                        <IonInput className='out'
                             type="number"
                             step="any"
                         
                             value={numberInput}
-                            placeholder="Enter Value of Transaction"
+                            placeholder="       Enter Value of Transaction"
                             onIonChange={e => setNumberInput(e.detail.value!)}
                         />
                     </IonItem>
                     <IonButton expand="block" type="submit">Submit Number</IonButton>
                 </form>
-                <ul>
+                <ul className='someone'>
                     {numbers.map(({ id, balance }) => (
                         <IonItem key={id}>
                             {editId === id ? (

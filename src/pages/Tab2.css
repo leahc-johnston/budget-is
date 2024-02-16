@@ -22,7 +22,15 @@ its not in a box, just slap an ID on it*/
 .BEANS{
     color: blueviolet;
 }
-
+.out{
+    color: black;
+    background-color: #53a45f;
+    /*font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;*/
+}
+.down{
+    margin-left: -5%;
+    margin-right: -5%;
+}
 .recentTransaction{
     margin-right: 10% ;
     margin-left: 10% ;
@@ -31,7 +39,17 @@ its not in a box, just slap an ID on it*/
     background-color: #102A43;
     box-shadow: 3px 3px 15px 3px rgb(2, 2, 12);
 }
+.beautiful{
+    color: black;
+    background-color: #8595bc;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.someone{
+    margin: 5%;
+    margin-right: 10%;
 
+}
 /* Transaction input box */
 .transactionInput{
     background-color: #315070;
