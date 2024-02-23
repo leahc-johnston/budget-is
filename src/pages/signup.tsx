@@ -7,7 +7,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { useHistory } from "react-router-dom";
 import Tab1 from './Tab1';
 import { IonButton, IonPage } from "@ionic/react";
-
+import './signup.css';
 
 
 const Login: React.FC = () => {
@@ -36,25 +36,26 @@ const Login: React.FC = () => {
   return (
     <IonPage>
       <h1>{isLogin ? "Login" : "Sign Up"}</h1>
-      <form onSubmit={handleAuth}>
-        <input
+      <form onSubmit={handleAuth} className="cell">
+  
+        <input 
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
           required
-        />
+        /><br></br><br></br>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           required
-        />
+        /><br></br><br></br>
         {/* <IonButton onClick={() => {handleAuth}}></IonButton> */}
-      <button type="submit">{isLogin ? "Login" : "Sign Up"}</button> 
+      <button className="chip"type="submit">{isLogin ? "Login" : "Sign Up"}</button> 
       </form>
-      <button onClick={() => setIsLogin(!isLogin)}>
+      <button className="legally" onClick={() => setIsLogin(!isLogin)}>
         {isLogin ? "Switch to Sign Up" : "Switch to Login"}
       </button>
     
