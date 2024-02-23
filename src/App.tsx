@@ -1,11 +1,12 @@
 import React, { useRef } from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route } from 'react-router-dom';
 import { IonApp, IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { ellipse, square, triangle } from 'ionicons/icons';
 import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
+import Login from './pages/signup';
 import handleSubmit from './components/firebasePull';
 
 import '@ionic/react/css/core.css';
@@ -48,18 +49,21 @@ const App: React.FC = () => {
             <Route exact path="/tab3">
               <Tab3 />
             </Route>
-            <Route exact path="/form">
-              {/* The form from your first code snippet */}
+ {/*            <Route exact path="/form">
+             The form from your first code snippet 
               <div className="App">
                 <form onSubmit={submithandler}>
                   <input type="text" ref={dataRef} />
                   <button type="submit">Save</button>
                 </form>
               </div>
-            </Route>
+            </Route> */}
+            <BrowserRouter>
+              <Login/>
+            </BrowserRouter>
             <Route exact path="/">
-              <Redirect to="/tab1" />
-            </Route>
+              <Redirect to="/Login" />
+            </Route> 
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
             <IonTabButton tab="tab1" href="/tab1">

@@ -1,15 +1,20 @@
 // src/AuthPage.tsx
 
 import React, { useState } from "react";
-import { auth, firestore } from "./firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, firestore } from "../components/firebase";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { useHistory } from "react-router-dom"; // Import useHistory
+import { useHistory } from "react-router-dom";
+import Tab1 from './Tab1';
+import { IonButton, IonPage } from "@ionic/react";
 
-const AuthPage: React.FC = () => {
+
+
+const Login: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const history = useHistory();
 
   const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,13 +26,15 @@ const AuthPage: React.FC = () => {
         await createUserWithEmailAndPassword(auth, email, password);
         console.log("Account created successfully");
       }
+      history.push('/Tab1');
+      window.location.reload();
     } catch (error) {
       console.error("Authentication error:", error);
     }
   };
 
   return (
-    <div>
+    <IonPage>
       <h1>{isLogin ? "Login" : "Sign Up"}</h1>
       <form onSubmit={handleAuth}>
         <input
@@ -44,13 +51,15 @@ const AuthPage: React.FC = () => {
           placeholder="Password"
           required
         />
-        <button type="submit">{isLogin ? "Login" : "Sign Up"}</button>
+        {/* <IonButton onClick={() => {handleAuth}}></IonButton> */}
+      <button type="submit">{isLogin ? "Login" : "Sign Up"}</button> 
       </form>
       <button onClick={() => setIsLogin(!isLogin)}>
         {isLogin ? "Switch to Sign Up" : "Switch to Login"}
       </button>
-    </div>
+    
+    </IonPage>
   );
 };
 
-export default AuthPage;
+export default Login;
