@@ -64,24 +64,24 @@ const Login: React.FC = () => {
   return (
     <IonPage>
       <h1>{isLogin ? "Login" : "Sign Up"}</h1>
-      <form onSubmit={handleAuth}>
+      <form className="cell" onSubmit={handleAuth}>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
           required
-        />
+        /><br></br><br></br>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           required
-        />
-        <button type="submit">{isLogin ? "Login" : "Sign Up"}</button> 
+        /><br></br><br></br>
+        <button className="chip" type="submit">{isLogin ? "Login" : "Sign Up"}</button> 
       </form>
-      <button onClick={() => setIsLogin(!isLogin)}>
+      <button className="legally" onClick={() => setIsLogin(!isLogin)}>
         {isLogin ? "Switch to Sign Up" : "Switch to Login"}
       </button>
     </IonPage>
