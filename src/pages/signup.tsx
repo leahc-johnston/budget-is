@@ -44,6 +44,7 @@ const Login: React.FC = () => {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
         console.log("Logged in successfully");
+        window.location.reload();
       } else {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         console.log("Account created successfully");
