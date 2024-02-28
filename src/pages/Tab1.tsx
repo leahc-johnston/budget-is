@@ -1,40 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import './Tab1.css';
-import { sumAllBalances, sumWithdrawl, sumDeposit } from '../components/firebasePull'; // Adjust the import path as needed
-import { pushTotals, pushPositives, pushNegatives, pushAllTotals } from '../components/firebasePush'; // Adjust the import path as needed
+import { sumAllBalances, sumWithdrawl, sumDeposit } from '../components/firebasePull';
+import { pushTotals, pushPositives, pushNegatives, pushAllTotals } from '../components/firebasePush';
+import { useUser } from '../components/context'; // Ensure this path is correctly pointing to where your context is defined
 
 const Tab1: React.FC = () => {
   const [totalSum, setTotalSum] = useState<number>(0);
   const [totalNeg, setTotalNeg] = useState<number>(0);
   const [totalPos, setTotalPos] = useState<number>(0);
+  const { userId } = useUser(); // Correctly using userId
+
+  
 
   useEffect(() => {
+    console.log('Current User ID:', userId); // Correctly log userId
     const calculateAndSetTotalSum = async () => {
-      const sum = await sumAllBalances();
+      const sum = await sumAllBalances(); // Pass userId as argument
       setTotalSum(sum);
     };
 
     calculateAndSetTotalSum();
-  }, []);
+  }, [userId]); // Use userId as a dependency
 
   useEffect(() => {
     const calculateAndSetWithdrawl = async () => {
-      const sumNeg = await sumWithdrawl();
+      const sumNeg = await sumWithdrawl(); // Pass userId as argument
       setTotalNeg(sumNeg);
     };
 
     calculateAndSetWithdrawl();
-  }, []);
+  }, [userId]); // Use userId as a dependency
 
   useEffect(() => {
     const calculateAndSetDeposit = async () => {
-      const sumPos = await sumDeposit();
+      const sumPos = await sumDeposit(); // Pass userId as argument
       setTotalPos(sumPos);
     };
 
     calculateAndSetDeposit();
-  }, []);
+  }, [userId]); // Use userId as a dependency
 
 
 
