@@ -93,7 +93,7 @@ const Tab2: React.FC = () => {
                     </IonItem>
                     <IonButton expand="block" type="submit">Submit Number</IonButton>
                 </form>
-                <ul className='someone'>
+                <ul className=''>
                     {numbers.map(({ id, balance }) => (
                         <IonItem key={id}>
                             {editId === id ? (
