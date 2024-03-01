@@ -1,6 +1,7 @@
 import { collection, getDocs, query, where, Firestore } from "@firebase/firestore";
 import { firestore } from "../components/firebase";
 import { addDoc, doc, updateDoc } from "firebase/firestore";
+import { useUser } from "./context";
 
 
 type test = {
@@ -36,7 +37,7 @@ const fetchBalances = async (): Promise<{ id: string, balance: number }[]> => {
 export { fetchBalances };
 
 //adds new balance to firebase
-export const pushNumber = async (entry: { balance: number }) => {
+/* export const pushNumber = async (entry: { balance: number }) => {
     const ref = collection(firestore, "test"); // test is collection name
     try {
         //adds new document with entered data
@@ -45,7 +46,7 @@ export const pushNumber = async (entry: { balance: number }) => {
     } catch (e) {
         console.error("Error adding document: ", e);
     }
-};
+}; */
 
 const sumAllBalances = async (): Promise<number> => {
     const testCollection = collection(firestore, "test"); //test is name of collection
