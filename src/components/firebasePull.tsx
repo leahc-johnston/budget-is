@@ -1,6 +1,7 @@
 import { collection, getDocs, query, where, Firestore } from "@firebase/firestore";
 import { firestore } from "../components/firebase";
 import { addDoc, doc, updateDoc } from "firebase/firestore";
+import { useUser } from "./context";
 
 
 type test = {
@@ -15,28 +16,27 @@ export type BalanceData = {
 
 
 // Function to retrieve numbers from Firebase
-const fetchBalances = async (): Promise<{ id: string, balance: number }[]> => {
-    const testCollection = collection(firestore, "test"); //reference to 'test' collection
+const fetchBalances = async (userId: string): Promise<{ id: string, balance: number }[]> => {
+    const balanceCollection = collection(firestore, "balance"); // Reference to 'balance' collection
+    const q = query(balanceCollection, where("userId", "==", userId)); // Updated to use "userId"
 
     try {
-        //fetch documents from firerstore
-        const querySnapshot = await getDocs(testCollection);
-        //map through documents to get id and balance
+        const querySnapshot = await getDocs(q);
         const balances = querySnapshot.docs.map(doc => ({
-            id: doc.id, //document id
-            balance: doc.data().balance as number //balance value
+            id: doc.id,
+            balance: doc.data().balance as number // Assuming 'balance' is correctly named
         }));
-        return balances; //returns array of balances
+        console.log("Fetched balances:", balances); // Useful for debugging
+        return balances;
     } catch (err) {
         console.error("Error fetching balances:", err);
         return [];
     }
 };
-
-export { fetchBalances };
+export {fetchBalances}
 
 //adds new balance to firebase
-export const pushNumber = async (entry: { balance: number }) => {
+/* export const pushNumber = async (entry: { balance: number }) => {
     const ref = collection(firestore, "test"); // test is collection name
     try {
         //adds new document with entered data
@@ -45,23 +45,28 @@ export const pushNumber = async (entry: { balance: number }) => {
     } catch (e) {
         console.error("Error adding document: ", e);
     }
-};
+}; */
 
-const sumAllBalances = async (): Promise<number> => {
-    const testCollection = collection(firestore, "test"); //test is name of collection
+const sumAllBalances = async (userId: string): Promise<number> => {
+    const balanceCollection = collection(firestore, "balance"); // Assuming the correct collection name is "balance"
     let sum = 0;
 
     try {
-        //fetch all documents from collection
-        const querySnapshot = await getDocs(testCollection);
-        //sums balance values
+        // Create a query that filters documents by userId
+        const q = query(balanceCollection, where("userId", "==", userId));
+
+        // Fetch documents from collection that match the query
+        const querySnapshot = await getDocs(q);
+
+        // Sum balance values for documents that match the userId
         querySnapshot.forEach(doc => {
             const balance = doc.data().balance;
             if (typeof balance === 'number') { // Make sure balance is a number
                 sum += balance;
             }
         });
-        console.log("Total sum of balances:", sum);
+
+        console.log("Total sum of balances for userId", userId, ":", sum);
         return sum;
     } catch (err) {
         console.error("Error fetching and summing balances:", err);
@@ -71,55 +76,62 @@ const sumAllBalances = async (): Promise<number> => {
 
 export { sumAllBalances };
 
-const sumWithdrawl = async (): Promise<number> => {
-    const testCollection = collection(firestore, "test"); //test is name of collection
+const sumWithdrawl = async (userId: string): Promise<number> => {
+    const balanceCollection = collection(firestore, "balance"); // Assuming "balance" is the correct collection name
     let sumNeg = 0;
 
     try {
-        //fetch all documents from collection
-        const querySnapshot = await getDocs(testCollection);
-        //sums balance values
+        // Create a query that filters documents by userId
+        const q = query(balanceCollection, where("userId", "==", userId));
+
+        // Fetch documents from collection that match the query
+        const querySnapshot = await getDocs(q);
+
+        // Sum negative balance values for documents that match the userId
         querySnapshot.forEach(doc => {
             const balance = doc.data().balance;
-            if (balance < 0) { // Make sure balance is a number
+            if (typeof balance === 'number' && balance < 0) { // Check if balance is a negative number
                 sumNeg += balance;
             }
         });
-        console.log("Total sum of balances:", sumNeg);
+
+        console.log("Total sum of withdrawals for userId", userId, ":", sumNeg);
         return sumNeg;
     } catch (err) {
-        console.error("Error fetching and summing balances:", err);
+        console.error("Error fetching and summing withdrawals:", err);
         return 0; 
     }
 };
 
-export { sumWithdrawl };
+export{sumWithdrawl}
 
-const sumDeposit = async (): Promise<number> => {
-    const testCollection = collection(firestore, "test"); //test is name of collection
+const sumDeposit = async (userId: string): Promise<number> => {
+    const balanceCollection = collection(firestore, "balance"); // Assuming "balance" is the correct collection name
     let sumPos = 0;
 
     try {
-        //fetch all documents from collection
-        const querySnapshot = await getDocs(testCollection);
-        //sums balance values
+        // Create a query that filters documents by userId
+        const q = query(balanceCollection, where("userId", "==", userId));
+
+        // Fetch documents from collection that match the query
+        const querySnapshot = await getDocs(q);
+
+        // Sum positive balance values for documents that match the userId
         querySnapshot.forEach(doc => {
             const balance = doc.data().balance;
-            if (balance >= 0) { // Make sure balance is a number
+            if (typeof balance === 'number' && balance >= 0) { // Check if balance is a positive number
                 sumPos += balance;
             }
         });
-        console.log("Total sum of balances:", sumPos);
+
+        console.log("Total sum of deposits for userId", userId, ":", sumPos);
         return sumPos;
     } catch (err) {
-        console.error("Error fetching and summing balances:", err);
+        console.error("Error fetching and summing deposits:", err);
         return 0; 
     }
 };
-
-export { sumDeposit };
-
-
+export{sumDeposit}
 type TestData = {
     // Define structure later
 };

@@ -15,30 +15,39 @@ const Tab1: React.FC = () => {
 
   useEffect(() => {
     console.log('Current User ID:', userId); // Correctly log userId
-    const calculateAndSetTotalSum = async () => {
-      const sum = await sumAllBalances(); // Pass userId as argument
-      setTotalSum(sum);
-    };
 
-    calculateAndSetTotalSum();
-  }, [userId]); // Use userId as a dependency
+    // Ensure this function is called only if userId is available
+    if (userId) {
+        const calculateAndSetTotalSum = async () => {
+            const sum = await sumAllBalances(userId); // Now passing userId as argument
+            setTotalSum(sum);
+        };
+        calculateAndSetTotalSum();
+    }
+}, [userId]); // Add userId as a dependency to re-run this effect when userId changes
 
   useEffect(() => {
-    const calculateAndSetWithdrawl = async () => {
-      const sumNeg = await sumWithdrawl(); // Pass userId as argument
-      setTotalNeg(sumNeg);
-    };
+    if(userId){
+      const calculateAndSetWithdrawl = async () => {
+        const sumNeg = await sumWithdrawl(userId); // Pass userId as argument
+        setTotalNeg(sumNeg);
+      };
+    
 
     calculateAndSetWithdrawl();
+    }
   }, [userId]); // Use userId as a dependency
 
   useEffect(() => {
-    const calculateAndSetDeposit = async () => {
-      const sumPos = await sumDeposit(); // Pass userId as argument
-      setTotalPos(sumPos);
-    };
+    if(userId){
+
+      const calculateAndSetDeposit = async () => {
+        const sumPos = await sumDeposit(userId); // Pass userId as argument
+        setTotalPos(sumPos);
+      };
 
     calculateAndSetDeposit();
+    }
   }, [userId]); // Use userId as a dependency
 
 

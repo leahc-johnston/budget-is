@@ -5,17 +5,18 @@ import { Timestamp } from "@firebase/firestore";
 
 import { BalanceData } from './firebasePull';
 
+import {useUser} from './context';
+
 
 //push data function
-const pushNumber = async ({ balance }: { balance: number }) => {
-    const ref = collection(firestore, "test"); // Ensure this is the correct collection name
+const pushNumber = async ({ userId, balance }: { userId: string, balance: number }) => {
+    const ref = collection(firestore, "balance"); // Changed to the correct collection name
     try {
-        await addDoc(ref, { balance });
-        console.log("Transaction added successfully");
+        await addDoc(ref, { userId, balance, timestamp: Timestamp.fromDate(new Date()) });
+        console.log("Balance added successfully");
     } catch (err) {
-        console.error("Error adding transaction to Firestore:", err);
+        console.error("Error adding balance to Firestore:", err);
     }
-
 };
 
 const pushTotals = async ({ dailySum }: { dailySum : number }) => {

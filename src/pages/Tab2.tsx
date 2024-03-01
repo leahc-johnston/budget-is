@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonButton, IonItem, IonLabel, IonSegment, IonSegmentButton } from '@ionic/react';
-import { fetchBalances, updateBalance, pushNumber } from '../components/firebasePull';
+import { fetchBalances, updateBalance } from '../components/firebasePull';
 import './Tab2.css';
+import { pushNumber } from '../components/firebasePush';
+import{useUser} from "../components/context";
+
+
 
 const Tab2: React.FC = () => {
     const [numberInput, setNumberInput] = useState<string>(''); //for managing transaction input
@@ -9,17 +13,24 @@ const Tab2: React.FC = () => {
     const [editId, setEditId] = useState<string | null>(null); //for identifying transaction being edited
     const [editValue, setEditValue] = useState<string>(''); //for value being edited
     const [numbers, setNumbers] = useState<{ id: string, balance: number }[]>([]); // for storing transactions to database
+    const { userId } = useUser();
 
+    console.log("User ID from tab2", userId);
 
     //hook to fetch transactions
     useEffect(() => {
-        const fetchAndSetNumbers = async () => {
-            const fetchedNumbers = await fetchBalances();
-            setNumbers(fetchedNumbers);
-        };
-        fetchAndSetNumbers();
-        
-    }, []);
+        if (userId) {
+            // User ID is available, proceed with fetching
+            const fetchAndSetNumbers = async () => {
+                const fetchedNumbers = await fetchBalances(userId);
+                console.log("Fetched Numbers", fetchedNumbers);
+                setNumbers(fetchedNumbers);
+            };
+            fetchAndSetNumbers();
+        } else {
+            console.log("Waiting for user ID to become available...");
+        }
+    }, [userId]); // This effect depends on `userId` and will re-run when `userId` changes
 
     //initiate editing of transactions
     const startEditing = (id: string, balance: number) => {
@@ -42,27 +53,28 @@ const Tab2: React.FC = () => {
 
     //form submission for adding or updating transactions
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const number = parseFloat(numberInput);
+        e.preventDefault();
+        const number = parseFloat(numberInput);
 
-      //logic to handle deposit or withdraw
-    if (transactionType === 'deposit' || (transactionType === 'withdraw')) { // Ensure correct logic for transaction type and number
-        if (editId) {
-        //updating exisiting transaction if editing
-            await updateBalance(editId, transactionType === 'withdraw' ? -Math.abs(number) : number);
-        }else {
-            // add new transacation if not editing
-            await pushNumber({balance: transactionType === 'withdraw' ? -Math.abs(number) : number});
+        // Use userId directly instead of user?.uid
+        if (!userId) {
+            alert('User is not logged in.');
+            return;
         }
-          //resets fields after submission
-          setNumberInput('');
-          setEditId(null);
-      } 
-      else {
-          alert('Please enter a valid number for the selected transaction type.');
-      }
-      window.location.reload();
-  };
+
+        const balance = transactionType === 'withdraw' ? -Math.abs(number) : number;
+        if (editId) {
+            await updateBalance(editId, balance);
+        } else {
+            // Use userId directly
+            await pushNumber({ userId, balance });
+        }
+
+        setNumberInput('');
+        setEditId(null);
+        window.location.reload(); // Consider a more reactive way to refresh data
+    };
+
 
     return (
         <IonPage>
