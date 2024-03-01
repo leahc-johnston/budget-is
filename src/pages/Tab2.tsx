@@ -15,15 +15,22 @@ const Tab2: React.FC = () => {
     const [numbers, setNumbers] = useState<{ id: string, balance: number }[]>([]); // for storing transactions to database
     const { userId } = useUser();
 
+    console.log("User ID from tab2", userId);
+
     //hook to fetch transactions
     useEffect(() => {
-        const fetchAndSetNumbers = async () => {
-            const fetchedNumbers = await fetchBalances();
-            setNumbers(fetchedNumbers);
-        };
-        fetchAndSetNumbers();
-        
-    }, []);
+        if (userId) {
+            // User ID is available, proceed with fetching
+            const fetchAndSetNumbers = async () => {
+                const fetchedNumbers = await fetchBalances(userId);
+                console.log("Fetched Numbers", fetchedNumbers);
+                setNumbers(fetchedNumbers);
+            };
+            fetchAndSetNumbers();
+        } else {
+            console.log("Waiting for user ID to become available...");
+        }
+    }, [userId]); // This effect depends on `userId` and will re-run when `userId` changes
 
     //initiate editing of transactions
     const startEditing = (id: string, balance: number) => {

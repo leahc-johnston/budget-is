@@ -16,25 +16,24 @@ export type BalanceData = {
 
 
 // Function to retrieve numbers from Firebase
-const fetchBalances = async (): Promise<{ id: string, balance: number }[]> => {
-    const testCollection = collection(firestore, "test"); //reference to 'test' collection
+const fetchBalances = async (userId: string): Promise<{ id: string, balance: number }[]> => {
+    const balanceCollection = collection(firestore, "balance"); // Reference to 'balance' collection
+    const q = query(balanceCollection, where("userId", "==", userId)); // Updated to use "userId"
 
     try {
-        //fetch documents from firerstore
-        const querySnapshot = await getDocs(testCollection);
-        //map through documents to get id and balance
+        const querySnapshot = await getDocs(q);
         const balances = querySnapshot.docs.map(doc => ({
-            id: doc.id, //document id
-            balance: doc.data().balance as number //balance value
+            id: doc.id,
+            balance: doc.data().balance as number // Assuming 'balance' is correctly named
         }));
-        return balances; //returns array of balances
+        console.log("Fetched balances:", balances); // Useful for debugging
+        return balances;
     } catch (err) {
         console.error("Error fetching balances:", err);
         return [];
     }
 };
-
-export { fetchBalances };
+export {fetchBalances}
 
 //adds new balance to firebase
 /* export const pushNumber = async (entry: { balance: number }) => {
