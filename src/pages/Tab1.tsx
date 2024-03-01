@@ -15,13 +15,16 @@ const Tab1: React.FC = () => {
 
   useEffect(() => {
     console.log('Current User ID:', userId); // Correctly log userId
-    const calculateAndSetTotalSum = async () => {
-      const sum = await sumAllBalances(); // Pass userId as argument
-      setTotalSum(sum);
-    };
 
-    calculateAndSetTotalSum();
-  }, [userId]); // Use userId as a dependency
+    // Ensure this function is called only if userId is available
+    if (userId) {
+        const calculateAndSetTotalSum = async () => {
+            const sum = await sumAllBalances(userId); // Now passing userId as argument
+            setTotalSum(sum);
+        };
+        calculateAndSetTotalSum();
+    }
+}, [userId]); // Add userId as a dependency to re-run this effect when userId changes
 
   useEffect(() => {
     const calculateAndSetWithdrawl = async () => {
