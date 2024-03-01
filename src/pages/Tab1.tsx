@@ -27,21 +27,27 @@ const Tab1: React.FC = () => {
 }, [userId]); // Add userId as a dependency to re-run this effect when userId changes
 
   useEffect(() => {
-    const calculateAndSetWithdrawl = async () => {
-      const sumNeg = await sumWithdrawl(); // Pass userId as argument
-      setTotalNeg(sumNeg);
-    };
+    if(userId){
+      const calculateAndSetWithdrawl = async () => {
+        const sumNeg = await sumWithdrawl(userId); // Pass userId as argument
+        setTotalNeg(sumNeg);
+      };
+    
 
     calculateAndSetWithdrawl();
+    }
   }, [userId]); // Use userId as a dependency
 
   useEffect(() => {
-    const calculateAndSetDeposit = async () => {
-      const sumPos = await sumDeposit(); // Pass userId as argument
-      setTotalPos(sumPos);
-    };
+    if(userId){
+
+      const calculateAndSetDeposit = async () => {
+        const sumPos = await sumDeposit(userId); // Pass userId as argument
+        setTotalPos(sumPos);
+      };
 
     calculateAndSetDeposit();
+    }
   }, [userId]); // Use userId as a dependency
 
 
