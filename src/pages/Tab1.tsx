@@ -18,36 +18,36 @@ const Tab1: React.FC = () => {
 
     // Ensure this function is called only if userId is available
     if (userId) {
-        const calculateAndSetTotalSum = async () => {
-            const sum = await sumAllBalances(userId); // Now passing userId as argument
-            setTotalSum(sum);
-        };
-        calculateAndSetTotalSum();
-    }
+    const calculateAndSetTotalSum = async () => {
+      const sum = await sumAllBalances(userId); // Now passing userId as argument
+      setTotalSum(sum);
+          };
+    calculateAndSetTotalSum();
+  }
 }, [userId]); // Add userId as a dependency to re-run this effect when userId changes
 
   useEffect(() => {
-    if(userId){
-      const calculateAndSetWithdrawl = async () => {
-        const sumNeg = await sumWithdrawl(userId); // Pass userId as argument
-        setTotalNeg(sumNeg);
-      };
-    
+if(userId){
+    const calculateAndSetWithdrawl = async () => {
+      const sumNeg = await sumWithdrawl(userId); // Pass userId as argument
+      setTotalNeg(sumNeg);
+    };
+
 
     calculateAndSetWithdrawl();
-    }
+}
   }, [userId]); // Use userId as a dependency
 
   useEffect(() => {
-    if(userId){
+if(userId){
 
-      const calculateAndSetDeposit = async () => {
-        const sumPos = await sumDeposit(userId); // Pass userId as argument
-        setTotalPos(sumPos);
-      };
+    const calculateAndSetDeposit = async () => {
+      const sumPos = await sumDeposit(userId); // Pass userId as argument
+      setTotalPos(sumPos);
+    };
 
     calculateAndSetDeposit();
-    }
+}
   }, [userId]); // Use userId as a dependency
 
 
@@ -78,7 +78,7 @@ const Tab1: React.FC = () => {
           <p className='beans'>Total Sum </p>
           <p className='one'>{totalSum}</p>
        </div>
-       <IonButton className='total' onClick={() => pushAllTotals(totalSum, totalPos, totalNeg)}>SUBMIT DAILY TOTALS</IonButton>
+       <IonButton className='total' onClick={() => pushAllTotals(totalSum, totalPos, totalNeg, userId)}>SUBMIT DAILY TOTALS</IonButton>
 
       </IonContent>
     </IonPage>

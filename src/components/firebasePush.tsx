@@ -5,7 +5,7 @@ import { Timestamp } from "@firebase/firestore";
 
 import { BalanceData } from './firebasePull';
 
-import {useUser} from './context';
+
 
 
 //push data function
@@ -19,10 +19,11 @@ const pushNumber = async ({ userId, balance }: { userId: string, balance: number
     }
 };
 
-const pushTotals = async ({ dailySum }: { dailySum : number }) => {
-    const ref = collection(firestore, "test"); // Ensure this is the correct collection name
+const pushTotals = async ({ userId, dailySum }: { userId: string, dailySum : number}) => {
+;
+    const ref = collection(firestore, "balance"); // Ensure this is the correct collection name
     try {
-        await addDoc(ref, { dailySum });
+        await addDoc(ref, { userId, dailySum, timestamp: Timestamp.fromDate(new Date()) });
         console.log("Transaction added successfully");
     } catch (err) {
         console.error("Error adding transaction to Firestore:", err);
@@ -30,10 +31,10 @@ const pushTotals = async ({ dailySum }: { dailySum : number }) => {
 
 };
 
-const pushPositives = async ({ dailyDeposits }: { dailyDeposits : number }) => {
-    const ref = collection(firestore, "test"); // Ensure this is the correct collection name
+const pushPositives = async ({ userId, dailyDeposits }: { userId: string, dailyDeposits : number}) => {
+    const ref = collection(firestore, "balance"); // Ensure this is the correct collection name
     try {
-        await addDoc(ref, { dailyDeposits });
+        await addDoc(ref, { userId, dailyDeposits, timestamp: Timestamp.fromDate(new Date()) });
         console.log("Transaction added successfully");
     } catch (err) {
         console.error("Error adding transaction to Firestore:", err);
@@ -41,10 +42,10 @@ const pushPositives = async ({ dailyDeposits }: { dailyDeposits : number }) => {
 
 };
 
-const pushNegatives = async ({ dailyWithdrawls }: { dailyWithdrawls : number }) => {
-    const ref = collection(firestore, "test"); // Ensure this is the correct collection name
+const pushNegatives = async ({ userId, dailyWithdrawls }: { userId: string, dailyWithdrawls : number}) => {
+    const ref = collection(firestore, "balance"); // Ensure this is the correct collection name
     try {
-        await addDoc(ref, { dailyWithdrawls });
+        await addDoc(ref, { userId, dailyWithdrawls, timestamp: Timestamp.fromDate(new Date()) });
         console.log("Transaction added successfully");
     } catch (err) {
         console.error("Error adding transaction to Firestore:", err);
@@ -55,11 +56,12 @@ let totalSum : number;
 let totalPos: number;
 let totalNeg: number;
 
-const pushAllTotals = (totalSum: number, totalPos: number, totalNeg: number) => {
-    pushTotals({dailySum : totalSum});
-    pushPositives({dailyDeposits : totalPos});
-    pushNegatives({dailyWithdrawls : totalNeg});
-  };
+const pushAllTotals = (totalSum: number, totalPos: number, totalNeg: number, userId: string) => {
+    console.log(userId);
+    pushTotals({userId: userId, dailySum : totalSum});
+    pushPositives({userId: userId, dailyDeposits : totalPos});
+    pushNegatives({userId: userId, dailyWithdrawls : totalNeg});
+};
 
 
 
