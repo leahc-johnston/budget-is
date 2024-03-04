@@ -18,9 +18,10 @@ h1 {
 .chip{
     background-color:#8595bc;
     color: black;
-    font-size: 250%;
+    font-size: 175%;
     padding: 2%;
-    width: 40%;
+    margin-bottom: 2%;
+    min-width: 30%;
 }
 .cell{
     text-align: center;
@@ -30,9 +31,7 @@ h1 {
     padding-top: 2%;
     padding-bottom: 2%;
 }
-.lose{
-    background-color: black;
-}
+
 
 input[type="email"], textarea{
     background-color: #53a45f;
