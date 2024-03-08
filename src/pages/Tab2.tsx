@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonButton, IonItem, IonLabel, IonSegment, IonSegmentButton } from '@ionic/react';
 import { fetchBalances, updateBalance } from '../components/firebasePull';
@@ -12,7 +12,16 @@ const Tab2: React.FC = () => {
     const [numbers, setNumbers] = useState<{ id: string, balance: number }[]>([]);
     const [editId, setEditId] = useState<string | null>(null); // for identifying transaction being edited
     const { userId } = useUser();
-
+    const contentRef = useRef<HTMLIonContentElement>(null);
+    useEffect(() => {
+        // Calculate the height of the content
+        const contentHeight = document.body.scrollHeight;
+        if (contentRef.current) {
+          // Set the height of the IonContent dynamically
+          contentRef.current.style.height = `${contentHeight}px`;
+        }
+      }, []);
+    
     useEffect(() => {
         if (userId) {
             const fetchAndSetNumbers = async () => {
@@ -78,7 +87,7 @@ const Tab2: React.FC = () => {
                     <IonTitle className='beautiful'>Add Transaction</IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <IonContent fullscreen>
+            <IonContent fullscreen ref={contentRef}>
             <IonSegment 
                 value={transactionType} 
                 onIonChange={e => setTransactionType(e.detail.value as string)}

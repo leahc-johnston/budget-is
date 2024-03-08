@@ -69,7 +69,7 @@ if(userId){
           <IonTitle size="large">Tab 1</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent fullscreen ref={contentRef}>
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle size="large">Tab 2</IonTitle> {/* Same here regarding the title */}
