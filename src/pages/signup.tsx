@@ -59,6 +59,7 @@ const Login: React.FC = () => {
       }
     } catch (error) {
       console.error("Authentication error:", error);
+      window.location.reload();
     }
   };
 

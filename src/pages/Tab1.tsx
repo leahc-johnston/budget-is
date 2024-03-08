@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import './Tab1.css';
 import { sumAllBalances, sumWithdrawl, sumDeposit } from '../components/firebasePull';
@@ -11,7 +11,15 @@ const Tab1: React.FC = () => {
   const [totalPos, setTotalPos] = useState<number>(0);
   const { userId } = useUser(); // Correctly using userId
 
-  
+  const contentRef = useRef<HTMLIonContentElement>(null);
+  useEffect(() => {
+    // Calculate the height of the content
+    const contentHeight = document.body.scrollHeight;
+    if (contentRef.current) {
+      // Set the height of the IonContent dynamically
+      contentRef.current.style.height = `${contentHeight}px`;
+    }
+  }, []);
 
   useEffect(() => {
     console.log('Current User ID:', userId); // Correctly log userId

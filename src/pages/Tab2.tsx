@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonButton, IonItem, IonLabel, IonSegment, IonSegmentButton } from '@ionic/react';
 import { fetchBalances, updateBalance } from '../components/firebasePull';
 import './Tab2.css';
 import { pushNumber } from '../components/firebasePush';
 import{useUser} from "../components/context";
-
 
 
 const Tab2: React.FC = () => {
@@ -16,7 +15,16 @@ const Tab2: React.FC = () => {
     const { userId } = useUser();
 
     console.log("User ID from tab2", userId);
+    const contentRef = useRef<HTMLIonContentElement>(null);
 
+    useEffect(() => {
+      // Calculate the height of the content
+      const contentHeight = document.body.scrollHeight;
+      if (contentRef.current) {
+        // Set the height of the IonContent dynamically
+        contentRef.current.style.height = `${contentHeight}px`;
+      }
+    }, []);
     //hook to fetch transactions
     useEffect(() => {
         if (userId) {
@@ -83,7 +91,7 @@ const Tab2: React.FC = () => {
                     <IonTitle className='beautiful'>Add Transaction</IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <IonContent fullscreen>
+            <IonContent ref={contentRef} fullscreen>
             <IonSegment value={transactionType} onIonChange={e => setTransactionType(e.detail.value as string ?? 'deposit')}>
                     <IonSegmentButton value="deposit">
                         <IonLabel>Deposit</IonLabel>
@@ -126,6 +134,7 @@ const Tab2: React.FC = () => {
                         </IonItem>
                     ))}
                 </ul>
+   
             </IonContent>
         </IonPage>
     );
