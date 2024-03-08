@@ -1,80 +1,75 @@
 import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonButton, IonItem, IonLabel, IonSegment, IonSegmentButton } from '@ionic/react';
 import { fetchBalances, updateBalance } from '../components/firebasePull';
 import './Tab2.css';
 import { pushNumber } from '../components/firebasePush';
-import{useUser} from "../components/context";
-
-
+import { useUser } from "../components/context";
 
 const Tab2: React.FC = () => {
-    const [numberInput, setNumberInput] = useState<string>(''); //for managing transaction input
-    const [transactionType, setTransactionType] = useState<string>('deposit'); //for tracking transaction type
-    const [editId, setEditId] = useState<string | null>(null); //for identifying transaction being edited
-    const [editValue, setEditValue] = useState<string>(''); //for value being edited
-    const [numbers, setNumbers] = useState<{ id: string, balance: number }[]>([]); // for storing transactions to database
+    const { register, handleSubmit, setValue, watch, reset } = useForm();
+    const [transactionType, setTransactionType] = useState<string>('deposit');
+    const [numbers, setNumbers] = useState<{ id: string, balance: number }[]>([]);
+    const [editId, setEditId] = useState<string | null>(null); // for identifying transaction being edited
     const { userId } = useUser();
 
-    console.log("User ID from tab2", userId);
-
-    //hook to fetch transactions
     useEffect(() => {
         if (userId) {
-            // User ID is available, proceed with fetching
             const fetchAndSetNumbers = async () => {
                 const fetchedNumbers = await fetchBalances(userId);
-                console.log("Fetched Numbers", fetchedNumbers);
                 setNumbers(fetchedNumbers);
             };
             fetchAndSetNumbers();
-        } else {
-            console.log("Waiting for user ID to become available...");
         }
-    }, [userId]); // This effect depends on `userId` and will re-run when `userId` changes
+    }, [userId]);
 
-    //initiate editing of transactions
-    const startEditing = (id: string, balance: number) => {
-        setEditId(id);
-        setEditValue(balance.toString());
-    };
+    useEffect(() => {
+        register('numberInput'); // Register input field
+    }, [register]);
 
-    //save edit to database
-    const saveEdit = async (id: string) => {
-        const updatedNumber = parseFloat(editValue);
-        if (!isNaN(updatedNumber)) {
-            await updateBalance(id, updatedNumber);
-            setEditId(null);
-            setEditValue('');
-            fetchAndSetNumbers(); // Refresh the data - currently not working
-            
+    const onSubmit = async (data: any) => {
+        const number = parseFloat(data.numberInput);
+
+        if (isNaN(number) || number === 0) {
+            alert('Please enter a valid number.');
+            return;
         }
-        
-    };
 
-    //form submission for adding or updating transactions
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const number = parseFloat(numberInput);
-
-        // Use userId directly instead of user?.uid
         if (!userId) {
             alert('User is not logged in.');
             return;
         }
 
         const balance = transactionType === 'withdraw' ? -Math.abs(number) : number;
-        if (editId) {
-            await updateBalance(editId, balance);
-        } else {
-            // Use userId directly
-            await pushNumber({ userId, balance });
-        }
 
-        setNumberInput('');
-        setEditId(null);
-        window.location.reload(); // Consider a more reactive way to refresh data
+        try {
+            if (editId) {
+                await updateBalance(editId, balance);
+            } else {
+                await pushNumber({ userId, balance });
+            }
+            setEditId(null); // Reset edit state
+            reset({ numberInput: '' }); // Reset form fields
+            fetchAndSetNumbers(); // Refresh numbers list
+        } catch (error) {
+            console.error("Error submitting form: ", error);
+            alert('An error occurred while processing your transaction.');
+        }
+        window.location.reload();
     };
 
+    const startEditing = (id: string, balance: number) => {
+        setEditId(id);
+        setValue('numberInput', balance.toString());
+    };
+
+    // Fetch and set numbers directly within the component
+    const fetchAndSetNumbers = async () => {
+        if (userId) {
+            const fetchedNumbers = await fetchBalances(userId);
+            setNumbers(fetchedNumbers);
+        }
+    };
 
     return (
         <IonPage>
@@ -84,45 +79,36 @@ const Tab2: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
-            <IonSegment value={transactionType} onIonChange={e => setTransactionType(e.detail.value as string ?? 'deposit')}>
-                    <IonSegmentButton value="deposit">
-                        <IonLabel>Deposit</IonLabel>
-                    </IonSegmentButton>
-                    <IonSegmentButton value="withdraw">
-                        <IonLabel>Withdraw</IonLabel>
-                    </IonSegmentButton>
-                </IonSegment>
-                <form  onSubmit={handleSubmit} className='down'>
+            <IonSegment 
+                value={transactionType} 
+                onIonChange={e => setTransactionType(e.detail.value as string)}
+            >
+                <IonSegmentButton value="deposit">
+                    <IonLabel>Deposit</IonLabel>
+                </IonSegmentButton>
+                <IonSegmentButton value="withdraw">
+                    <IonLabel>Withdraw</IonLabel>
+                </IonSegmentButton>
+            </IonSegment>
+
+                
+                <form onSubmit={handleSubmit(onSubmit)} className='down'>
                     <IonItem>
-                        <IonInput className='out'
+                        <IonInput
                             type="number"
                             step="any"
-                        
-                            value={numberInput}
-                            placeholder="       Enter Value of Transaction"
-                            onIonChange={e => setNumberInput(e.detail.value!)}
+                            {...register('numberInput')}
+                            onIonChange={e => setValue('numberInput', e.detail.value!)}
+                            placeholder="Enter Value of Transaction"
                         />
                     </IonItem>
-                    <IonButton expand="block" type="submit">Submit Number</IonButton>
+                    <IonButton expand="block" type="submit">{editId ? "Save Changes" : "Submit Number"}</IonButton>
                 </form>
-                <ul className=''>
+                <ul>
                     {numbers.map(({ id, balance }) => (
                         <IonItem key={id}>
-                            {editId === id ? (
-                                <IonInput
-                                    value={editValue}
-                                    onIonChange={(e) => setEditValue(e.detail.value!)}
-                                    
-                                />
-                            ) : (
-                                <IonLabel>{balance}</IonLabel>
-                            )}
+                            <IonLabel>{balance}</IonLabel>
                             <IonButton onClick={() => startEditing(id, balance)}>Edit</IonButton>
-                            
-                            {editId === id && (
-                                <IonButton onClick={() => saveEdit(id) }>Save</IonButton>
-                                
-                            )}
                         </IonItem>
                     ))}
                 </ul>
@@ -132,7 +118,3 @@ const Tab2: React.FC = () => {
 };
 
 export default Tab2;
-function fetchAndSetNumbers() {
-  throw new Error('Function not implemented.');
-}
-

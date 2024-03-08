@@ -30,7 +30,7 @@ const Graph: React.FC = () => {
         hoverBackgroundColor: "#8595bc",
         hoverBorderColor: "#206b52",
         
-        data: [65, -59], /* change to rep the 7ish most recent values of net gain/loss*/
+        data: [100, -59], /* change to rep the 7ish most recent values of net gain/loss*/
       },
     ],
   };

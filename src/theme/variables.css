@@ -230,7 +230,15 @@ http://ionicframework.com/docs/theming/ */
     --ion-tab-bar-background: #102A43;
 
     --ion-card-background: #1e1e1e;
+
+    
   }
+}
+
+ion-tab-bar {
+  position: fixed !important; /*!imporant overrides any other posistions set for the tool bar. This is the only thing that worked to get the nav bar at the bottom*/
+  bottom: 0 !important;
+  width: 100% !important;
 }
 
 html {
