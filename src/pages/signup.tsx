@@ -4,6 +4,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
+  setPersistence, 
+  browserSessionPersistence
 } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import { IonPage } from "@ionic/react";

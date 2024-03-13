@@ -4,12 +4,16 @@ import './Tab1.css';
 import { sumAllBalances, sumWithdrawl, sumDeposit } from '../components/firebasePull';
 import { pushTotals, pushPositives, pushNegatives, pushAllTotals } from '../components/firebasePush';
 import { useUser } from '../components/context'; // Ensure this path is correctly pointing to where your context is defined
+import { signOut } from 'firebase/auth';
+import { auth } from '../components/firebase';
+import { useHistory } from 'react-router';
 
 const Tab1: React.FC = () => {
   const [totalSum, setTotalSum] = useState<number>(0);
   const [totalNeg, setTotalNeg] = useState<number>(0);
   const [totalPos, setTotalPos] = useState<number>(0);
   const { userId } = useUser(); // Correctly using userId
+  const history = useHistory();
 
   const contentRef = useRef<HTMLIonContentElement>(null);
   useEffect(() => {
@@ -58,6 +62,17 @@ if(userId){
 }
   }, [userId]); // Use userId as a dependency
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      history.push('/login');
+      window.location.reload();
+      // Add any post-logout logic here, such as redirecting to the login page
+    } catch (error) {
+      console.error('Logout Error:', error);
+      alert('An error occurred while logging out.');
+    }
+  };
 
 
 
@@ -66,6 +81,7 @@ if(userId){
     <IonPage >
       <IonHeader>
         <IonToolbar>
+        <IonButton fill="clear" slot="start" className="logoutButton" onClick={handleLogout}>Logout</IonButton>
           <IonTitle size="large">Tab 1</IonTitle>
         </IonToolbar>
       </IonHeader>
