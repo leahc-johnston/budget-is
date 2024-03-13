@@ -148,7 +148,7 @@ const handleSubmit = async (testdata: TestData) => {
 
 
 export const updateBalance = async (id: string, newBalance: number): Promise<void> => {
-    const docRef = doc(firestore, "test", id);
+    const docRef = doc(firestore, "balance", id);
     try {
         await updateDoc(docRef, { balance: newBalance });
         console.log("Balance updated successfully");

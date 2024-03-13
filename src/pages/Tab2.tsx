@@ -57,7 +57,7 @@ const Tab2: React.FC = () => {
             } else {
                 await pushNumber({ userId, balance });
             }
-            setEditId(null); // Reset edit state
+            //setEditId(null); // Reset edit state
             reset({ numberInput: '' }); // Reset form fields
             fetchAndSetNumbers(); // Refresh numbers list
         } catch (error) {
@@ -68,6 +68,8 @@ const Tab2: React.FC = () => {
     };
 
     const startEditing = (id: string, balance: number) => {
+        console.log("we clicked")
+        console.log(balance)
         setEditId(id);
         setValue('numberInput', balance.toString());
     };
@@ -87,7 +89,7 @@ const Tab2: React.FC = () => {
                     <IonTitle className='beautiful'>Add Transaction</IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <IonContent fullscreen ref={contentRef}>
+            <IonContent fullscreen ref={contentRef} className="content-pad">
             <IonSegment 
                 value={transactionType} 
                 onIonChange={e => setTransactionType(e.detail.value as string)}
@@ -102,18 +104,23 @@ const Tab2: React.FC = () => {
 
                 
                 <form onSubmit={handleSubmit(onSubmit)} className='down'>
-                    <IonItem>
+                    <IonItem style={{width: '100%'}}>
                         <IonInput
                             type="number"
                             step="any"
                             {...register('numberInput')}
-                            onIonChange={e => setValue('numberInput', e.detail.value!)}
+                            onIonChange={
+                                e => {
+                                console.log("input changed: ", e.detail.value)
+                                setValue('numberInput', e.detail.value!)}}
+
                             placeholder="Enter Value of Transaction"
+                            
                         />
                     </IonItem>
                     <IonButton expand="block" type="submit">{editId ? "Save Changes" : "Submit Number"}</IonButton>
                 </form>
-                <ul>
+                <ul style={{overflowY: 'scroll'}}>
                     {numbers.map(({ id, balance }) => (
                         <IonItem key={id}>
                             <IonLabel>{balance}</IonLabel>
