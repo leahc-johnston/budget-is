@@ -7,6 +7,8 @@ import { useUser } from '../components/context'; // Ensure this path is correctl
 import { signOut } from 'firebase/auth';
 import { auth } from '../components/firebase';
 import { useHistory } from 'react-router';
+import { string } from 'yargs';
+import A from './component'
 
 const Tab1: React.FC = () => {
   const [totalSum, setTotalSum] = useState<number>(0);
@@ -73,13 +75,13 @@ if(userId){
       alert('An error occurred while logging out.');
     }
 
-    //POTENTIAL TIME FUNCTION
+/*     //POTENTIAL TIME FUNCTION
     useEffect(() => {
       // Function to check the time and perform action if it's a new day
       const checkTimeAndPerformAction = () => {
         const now = new Date();
         const currentHour = now.getHours();
-        const currentDay = now.getDate();
+        const currentDay = now.getDate().toString();
   
         // Check if it's the top of the hour and a new day
         if (currentHour === 0 && currentDay !== localStorage.getItem('lastCheckedDay')) {
@@ -96,7 +98,7 @@ if(userId){
   
       // Clear the interval when the component unmounts
       return () => clearInterval(intervalId);
-    }, []); // Run only once when the component mounts
+    }, []); // Run only once when the component mounts */
 
 
 
@@ -119,7 +121,7 @@ if(userId){
             <IonTitle size="large">Tab 2</IonTitle> {/* Same here regarding the title */}
           </IonToolbar>
         </IonHeader>
-        
+        <A/>
         {/* Display the total sum of balances */}
         <div>
           <h2 className='work'>Total Sum of Balances:</h2>
@@ -130,6 +132,7 @@ if(userId){
           <p className='beans'>Total Sum </p>
           <p className='one'>{totalSum}</p>
        </div>
+       
        <IonButton className='total' onClick={() => pushAllTotals(totalSum, totalPos, totalNeg, userId)}>SUBMIT DAILY TOTALS</IonButton>
 
       </IonContent>
