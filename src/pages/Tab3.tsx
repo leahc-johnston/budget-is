@@ -67,11 +67,11 @@ const Tab3 = () => {
 
   const renderWeeklyTotals = () => {
     return Object.entries(weeklyTotals).map(([day, totals]) => (
-      <div key={day}>
-        <h3>{day}:</h3>
-        <p>Total Deposits: {totals.dailyDeposits}</p>
-        <p>Total Withdrawals: {totals.dailyWithdrawals}</p>
-        <p>Total Sum: {totals.dailySum}</p>
+      <div key={day} >
+        <h3 className='test'>{day}:</h3>
+        <p className='test'>Total Deposits: {totals.dailyDeposits}</p>
+        <p className='test'>Total Withdrawals: {totals.dailyWithdrawals}</p>
+        <p className='test'>Total Sum: {totals.dailySum}</p>
       </div>
     ));
   };
