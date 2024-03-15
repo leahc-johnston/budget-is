@@ -3,6 +3,7 @@ import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { firestore } from '../components/firebase';
 import { startOfWeek, endOfWeek, format } from 'date-fns';
 import { useUser } from '../components/context';
+import { IonPage } from '@ionic/react';
 
 interface WeeklyTotal {
   dailyDeposits: number;
@@ -14,11 +15,18 @@ interface WeeklyTotals {
   [key: string]: WeeklyTotal;
 }
 
-const Tab3 = () => {
+const Tab3: React.FC = () => {
   const [weeklyTotals, setWeeklyTotals] = useState<WeeklyTotals>({});
   const { userId } = useUser();
   
   useEffect(() => {
+    if (!userId) {
+      console.log("User ID is null, waiting for authentication...");
+      return; // Exit the effect if userId is null
+    }
+    
+    console.log("User ID: ", userId); // Now we're sure userId is not null
+    
     const fetchWeeklyTotals = async () => {
       const now = new Date();
       const weekStart = startOfWeek(now, { weekStartsOn: 1 });
@@ -33,33 +41,25 @@ const Tab3 = () => {
         orderBy('timestamp', 'asc')
       );
 
-      const querySnapshot = await getDocs(q);
-      const totalsByDay: WeeklyTotals = {};
+      try {
+        const querySnapshot = await getDocs(q);
+        const totalsByDay: WeeklyTotals = {};
 
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const day = format(data.timestamp.toDate(), 'EEEE'); // e.g., 'Monday'
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const day = format(data.timestamp.toDate(), 'EEEE');
 
-        if (!totalsByDay[day]) {
-          totalsByDay[day] = {
-            dailyDeposits: 0,
-            dailyWithdrawals: 0,
-            dailySum: 0
-          };
-        }
+          totalsByDay[day] = totalsByDay[day] || { dailyDeposits: 0, dailyWithdrawals: 0, dailySum: 0 };
 
-        if (data.dailyDeposits) {
-          totalsByDay[day].dailyDeposits += data.dailyDeposits;
-        }
-        if (data.dailyWithdrawls) {
-          totalsByDay[day].dailyWithdrawals += data.dailyWithdrawls;
-        }
-        if (data.dailySum) {
-          totalsByDay[day].dailySum += data.dailySum;
-        }
-      });
+          totalsByDay[day].dailyDeposits += data.dailyDeposits || 0;
+          totalsByDay[day].dailyWithdrawals += data.dailyWithdrawls || 0; // Note the typo in your field name
+          totalsByDay[day].dailySum += data.dailySum || 0;
+        });
 
-      setWeeklyTotals(totalsByDay);
+        setWeeklyTotals(totalsByDay);
+      } catch (error) {
+        console.error("Error fetching weekly totals: ", error);
+      }
     };
 
     fetchWeeklyTotals();
@@ -76,7 +76,9 @@ const Tab3 = () => {
     ));
   };
 
-  return <div>{renderWeeklyTotals()}</div>;
+  return (
+    (<IonPage> <div>{renderWeeklyTotals()}</div>;</IonPage>)
+  )
 };
 
 export default Tab3;
