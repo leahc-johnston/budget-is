@@ -67,6 +67,7 @@ const Tab3: React.FC = () => {
 
   const renderWeeklyTotals = () => {
     return Object.entries(weeklyTotals).map(([day, totals]) => (
+      
       <div key={day} >
         <h3 className='test'>{day}:</h3>
         <p className='test'>Total Deposits: {totals.dailyDeposits}</p>
@@ -77,7 +78,8 @@ const Tab3: React.FC = () => {
   };
 
   return (
-    (<IonPage> <div>{renderWeeklyTotals()}</div>;</IonPage>)
+    (<IonPage> 
+      <div>{renderWeeklyTotals()}</div>;</IonPage>)
   )
 };
 

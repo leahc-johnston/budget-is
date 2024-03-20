@@ -109,10 +109,11 @@ if(userId){
 
   return (
     <IonPage >
+        
       <IonHeader>
         <IonToolbar>
         <IonButton fill="clear" slot="start" className="logoutButton" onClick={handleLogout}>Logout</IonButton>
-          <IonTitle size="large">Tab 1</IonTitle>
+          <IonTitle size="large">Totals</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen ref={contentRef}>
@@ -121,13 +122,13 @@ if(userId){
             <IonTitle size="large">Tab 2</IonTitle> {/* Same here regarding the title */}
           </IonToolbar>
         </IonHeader>
-        <A/>
+       
         {/* Display the total sum of balances */}
         <div>
           <h2 className='work'>Total Sum of Balances:</h2>
           <p className='beans'>Total Deposits </p>
           <p className='one'>{totalPos}</p>
-          <p className='beans'>Total Withdrawl</p>
+          <p className='beans'>Total Withdrawal</p>
           <p className='one'>{totalNeg}</p>
           <p className='beans'>Total Sum </p>
           <p className='one'>{totalSum}</p>
@@ -136,6 +137,7 @@ if(userId){
        <IonButton className='total' onClick={() => pushAllTotals(totalSum, totalPos, totalNeg, userId)}>SUBMIT DAILY TOTALS</IonButton>
 
       </IonContent>
+      <A /> 
     </IonPage>
   );
 };

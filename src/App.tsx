@@ -2,10 +2,11 @@ import React from 'react';
 import { IonApp, IonRouterOutlet, IonTabBar, IonTabButton, IonIcon, IonLabel, IonTabs, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
-import { ellipse, square, triangle } from 'ionicons/icons';
+import { ellipse, square, triangle, trendingUpSharp } from 'ionicons/icons';
 import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
+import Tab4 from './pages/Tab4';
 import Login from './pages/signup'; // Make sure this path is correct
 import { useUser } from './components/context'; // Adjust the import path as necessary
 
@@ -34,6 +35,7 @@ const App: React.FC = () => {
           <Route exact path="/tab1" component={Tab1} />
           <Route exact path="/tab2" component={Tab2} />
           <Route exact path="/tab3" component={Tab3} />
+          <Route exact path="/tab4" component={Tab4} />
           <Route exact path="/" render={() => <Redirect to="/login" />} />
         </IonRouterOutlet>
         
@@ -51,6 +53,10 @@ const App: React.FC = () => {
             <IonTabButton tab="tab3" href="/tab3">
               <IonIcon icon={square} />
               <IonLabel>Tab 3</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="tab4" href="/tab4">
+              <IonIcon icon={trendingUpSharp} />
+              <IonLabel></IonLabel>
             </IonTabButton>
           </IonTabBar>
         )}
