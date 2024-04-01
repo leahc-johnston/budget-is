@@ -87,19 +87,19 @@ if(userId){
         if (currentHour === 0 && currentDay !== localStorage.getItem('lastCheckedDay')) {
           // Perform your action here
           console.log("It's a new day!");
-          
-          // Store the current day to localStorage to track it
-          localStorage.setItem('lastCheckedDay', currentDay.toString());
-        }
-      };
-  
-      // Run the check every minute
-      const intervalId = setInterval(checkTimeAndPerformAction, 60000); // Check every minute
-  
-      // Clear the interval when the component unmounts
-      return () => clearInterval(intervalId);
-    }, []); // Run only once when the component mounts */
+        
+        // Store the current day to localStorage to track it
+        localStorage.setItem('lastCheckedDay', currentDay.toString());
+      }
+    };
 
+    // Run the check every minute
+    const intervalId = setInterval(checkTimeAndPerformAction, 6); // Check every minute
+
+    // Clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, []); // Run only once when the component mounts  */
+   
 
 
   };
@@ -121,7 +121,6 @@ if(userId){
             <IonTitle size="large">Tab 2</IonTitle> {/* Same here regarding the title */}
           </IonToolbar>
         </IonHeader>
-        <A/>
         {/* Display the total sum of balances */}
         <div>
           <h2 className='work'>Total Sum of Balances:</h2>
