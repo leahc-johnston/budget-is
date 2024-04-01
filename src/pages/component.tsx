@@ -25,17 +25,13 @@ const A = () => {
             console.log("current day:", currentDay)
             console.log("currentHour:", currentHour)
         };
-    
-        // Run the check every minute
+
         const intervalId = setInterval(checkTimeAndPerformAction, 60000); // Check every minute
-    
-        // Clear the interval when the component unmounts
+
         return () => clearInterval(intervalId);
-      }, []); // Run only once when the component mounts
-    return (
-        console.log("hi")
-    );
+    }, []);
+
+    return null; // A does not render anything
 };
 
 export default A;
-

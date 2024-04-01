@@ -124,10 +124,11 @@ const Tab1: React.FC = () => {
 
   return (
     <IonPage >
+        
       <IonHeader>
         <IonToolbar>
         <IonButton fill="clear" slot="start" className="logoutButton" onClick={handleLogout}>Logout</IonButton>
-          <IonTitle size="large">Tab 1</IonTitle>
+          <IonTitle size="large">Totals</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen ref={contentRef}>
@@ -141,7 +142,7 @@ const Tab1: React.FC = () => {
           <h2 className='work'>Total Sum of Balances:</h2>
           <p className='beans'>Total Deposits </p>
           <p className='one'>{totalPos}</p>
-          <p className='beans'>Total Withdrawl</p>
+          <p className='beans'>Total Withdrawal</p>
           <p className='one'>{totalNeg}</p>
           <p className='beans'>Total Sum </p>
           <p className='one'>{totalSum}</p>
@@ -150,6 +151,7 @@ const Tab1: React.FC = () => {
        {/* <IonButton className='total' onClick={() => pushAllTotals(totalSum, totalPos, totalNeg, userId)}>SUBMIT DAILY TOTALS</IonButton> */}
 
       </IonContent>
+      <A /> 
     </IonPage>
   );
 };

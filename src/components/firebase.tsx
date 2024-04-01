@@ -12,7 +12,7 @@ type FirebaseConfig = {
   measurementId: string | undefined;
 };
 
-const firebaseConfig = {
+const firebaseConfig: FirebaseConfig = {
   apiKey: "AIzaSyAUUnBpzDISarL6nrWoTOs6iu4FdyoMvfM",
   authDomain: "finance-4825c.firebaseapp.com",
   projectId: "finance-4825c",
@@ -24,9 +24,6 @@ const firebaseConfig = {
 
 const app: FirebaseApp = initializeApp(firebaseConfig);
 export const firestore: Firestore = getFirestore(app);
-export { app };
 const auth = getAuth(app);
 
-export { auth }
-
-
+export { app, auth, Firestore }; // Export Firestore type as well
