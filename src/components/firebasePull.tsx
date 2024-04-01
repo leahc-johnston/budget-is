@@ -1,7 +1,9 @@
-import { collection, getDocs, query, where, Firestore } from "@firebase/firestore";
+import { collection, getDocs, query, where, deleteDoc, Firestore} from "@firebase/firestore";
+//import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { firestore } from "../components/firebase";
-import { addDoc, doc, updateDoc } from "firebase/firestore";
+import { addDoc, doc, updateDoc,  } from "firebase/firestore";
 import { useUser } from "./context";
+
 
 
 type test = {
@@ -35,17 +37,68 @@ const fetchBalances = async (userId: string): Promise<{ id: string, balance: num
 };
 export {fetchBalances}
 
-//adds new balance to firebase
-/* export const pushNumber = async (entry: { balance: number }) => {
-    const ref = collection(firestore, "test"); // test is collection name
+const deleteOldData = async (firestoreDB: Firestore, userId: string, daysOld: number) => {
+    // Calculate the cutoff date
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - daysOld);
+    
+    // Get the current day's date
+    const currentDate = new Date();
+    const currentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    
+    const collectionRef = collection(firestoreDB, 'balance');
+    const q = query(
+      collectionRef,
+        where('userId', '==', userId), // Filter by the userId
+        where('timestamp', '<=', currentDay),
+    );
+  
     try {
-        //adds new document with entered data
-        const docRef = await addDoc(ref, entry);
-        console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-        console.error("Error adding document: ", e);
+      const querySnapshot = await getDocs(q);
+  
+      // Iterate over each document
+      querySnapshot.forEach((document) => {
+        //const dateTimestamp = document.timestamp().toDate(); // Assuming 'date' is a Timestamp field
+        //const documentDate = dateTimestamp.toDate(); // Convert Timestamp to Date
+  
+        // Check if the document's date is not equal to the current day's date
+        //if (documentDate < currentDay) {
+          // Delete the document
+          deleteDoc(doc(firestoreDB, 'balance', document.id));
+        });
+  
+      console.log('Old data tied to the userId has been successfully deleted.');
+    } catch (error) {
+      console.error('Error deleting old data: ', error);
     }
-}; */
+  };
+
+/* const deleteOldData = async (firestoreDB: Firestore, userId: string, daysOld: number) => {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - daysOld);
+  
+    const collectionRef = collection(firestoreDB, 'balance');
+    const q = query(
+      collectionRef,
+      where('userId', '==', userId), // Filter by the userId
+      where('date', '<', cutoffDate) // Filter by the cutoffDate
+    );
+  
+    try {
+      const querySnapshot = await getDocs(q);
+      const deletePromises = querySnapshot.docs.map((document) => {
+        return deleteDoc(doc(firestoreDB, 'balance', document.id));
+      });
+  
+      // Wait for all delete operations to complete
+      await Promise.all(deletePromises);
+      console.log('Old data tied to the userId has been successfully deleted.');
+    } catch (error) {
+      console.error('Error deleting old data: ', error);
+    }
+  }; */
+export { deleteOldData}
+
 
 const sumAllBalances = async (userId: string): Promise<number> => {
     const balanceCollection = collection(firestore, "balance"); // Assuming the correct collection name is "balance"
@@ -137,7 +190,7 @@ type TestData = {
 };
 
 const handleSubmit = async (testdata: TestData) => {
-    const ref = collection(firestore, "test");
+    const ref = collection(firestore, "balance");
 
     try {
         await addDoc(ref, testdata); // Directly use testdata here

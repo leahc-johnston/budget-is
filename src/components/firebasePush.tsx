@@ -11,6 +11,7 @@ import { BalanceData } from './firebasePull';
 //push data function
 const pushNumber = async ({ userId, balance }: { userId: string, balance: number }) => {
     const ref = collection(firestore, "balance"); // Changed to the correct collection name
+   
     try {
         await addDoc(ref, { userId, balance, timestamp: Timestamp.fromDate(new Date()) });
         console.log("Balance added successfully");
@@ -20,7 +21,7 @@ const pushNumber = async ({ userId, balance }: { userId: string, balance: number
 };
 
 const pushTotals = async ({ userId, dailySum }: { userId: string, dailySum : number}) => {
-;
+    console.log(userId)
     const ref = collection(firestore, "dailyTotals"); // Ensure this is the correct collection name
     try {
         await addDoc(ref, { userId, dailySum, timestamp: Timestamp.fromDate(new Date()) });
@@ -32,6 +33,7 @@ const pushTotals = async ({ userId, dailySum }: { userId: string, dailySum : num
 };
 
 const pushPositives = async ({ userId, dailyDeposits }: { userId: string, dailyDeposits : number}) => {
+    console.log(userId)
     const ref = collection(firestore, "dailyTotals"); // Ensure this is the correct collection name
     try {
         await addDoc(ref, { userId, dailyDeposits, timestamp: Timestamp.fromDate(new Date()) });
@@ -43,6 +45,7 @@ const pushPositives = async ({ userId, dailyDeposits }: { userId: string, dailyD
 };
 
 const pushNegatives = async ({ userId, dailyWithdrawls }: { userId: string, dailyWithdrawls : number}) => {
+    console.log(userId)
     const ref = collection(firestore, "dailyTotals"); // Ensure this is the correct collection name
     try {
         await addDoc(ref, { userId, dailyWithdrawls, timestamp: Timestamp.fromDate(new Date()) });

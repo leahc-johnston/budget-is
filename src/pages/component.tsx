@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import { pushAllTotals } from "../components/firebasePush"; 
 const A = () => {
 //POTENTIAL TIME FUNCTION
     useEffect(() => {
@@ -9,13 +10,20 @@ const A = () => {
           const currentDay = now.getDate().toString();
     
           // Check if it's the top of the hour and a new day
-          if (currentHour === 0 && currentDay !== localStorage.getItem('lastCheckedDay')) {
+          if (/*currentHour === 0 && */currentDay !== localStorage.getItem('lastCheckedDay')) {
             // Perform your action here
             console.log("It's a new day!");
+            console.log("current day:", currentDay)
+            console.log("currentHour:", currentHour)
+            //pushAllTotals(totalSum, totalPos, totalNeg, userId);
             
             // Store the current day to localStorage to track it
             localStorage.setItem('lastCheckedDay', currentDay.toString());
           }
+          else
+            console.log("Didn't seem to work")
+            console.log("current day:", currentDay)
+            console.log("currentHour:", currentHour)
         };
     
         // Run the check every minute

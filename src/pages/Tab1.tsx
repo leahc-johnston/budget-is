@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import './Tab1.css';
-import { sumAllBalances, sumWithdrawl, sumDeposit } from '../components/firebasePull';
+import { sumAllBalances, sumWithdrawl, sumDeposit, deleteOldData } from '../components/firebasePull';
 import { pushTotals, pushPositives, pushNegatives, pushAllTotals } from '../components/firebasePush';
 import { useUser } from '../components/context'; // Ensure this path is correctly pointing to where your context is defined
 import { signOut } from 'firebase/auth';
 import { auth } from '../components/firebase';
 import { useHistory } from 'react-router';
 import { string } from 'yargs';
-import A from './component'
+import { firestore } from "../components/firebase";
+import { collection, addDoc, query, where } from "@firebase/firestore";
+
 
 const Tab1: React.FC = () => {
   const [totalSum, setTotalSum] = useState<number>(0);
@@ -41,19 +43,19 @@ const Tab1: React.FC = () => {
 }, [userId]); // Add userId as a dependency to re-run this effect when userId changes
 
   useEffect(() => {
-if(userId){
-    const calculateAndSetWithdrawl = async () => {
+    if(userId){
+      const calculateAndSetWithdrawl = async () => {
       const sumNeg = await sumWithdrawl(userId); // Pass userId as argument
       setTotalNeg(sumNeg);
     };
 
 
     calculateAndSetWithdrawl();
-}
+    }
   }, [userId]); // Use userId as a dependency
 
   useEffect(() => {
-if(userId){
+    if(userId){
 
     const calculateAndSetDeposit = async () => {
       const sumPos = await sumDeposit(userId); // Pass userId as argument
@@ -61,8 +63,44 @@ if(userId){
     };
 
     calculateAndSetDeposit();
-}
+    }
   }, [userId]); // Use userId as a dependency
+
+  //POTENTIAL TIME FUNCTION
+  useEffect(() => {
+    // Function to check the time and perform action if it's a new day
+    const checkTimeAndPerformAction = () => {
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentDay = now.getDate().toString();
+      const { totalSum, totalPos, totalNeg } = parameters;
+      // Check if it's the top of the hour and a new day
+      if (/*currentHour === 0 && */currentDay !== localStorage.getItem('lastCheckedDay')) {
+        // Perform your action here
+        console.log("It's a new day!");
+        console.log(totalSum)
+        console.log(totalPos)
+        console.log(totalNeg)
+        pushAllTotals(totalSum, totalPos, totalNeg, userId);
+
+        console.log("current day:", currentDay)
+        console.log("currentHour:", currentHour)
+        const daysOld = 1; // Set the threshold for "old" data
+        deleteOldData(firestore, userId, daysOld);
+        // Store the current day to localStorage to track it
+        localStorage.setItem('lastCheckedDay', currentDay.toString());
+      }
+      else
+        console.log("Not a new day");
+    };
+    const parameters = { totalSum, totalPos, totalNeg };
+    // Run the check every minute
+    const intervalId = setInterval(checkTimeAndPerformAction, 6); // Check every minute
+
+    // Clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, [totalSum, totalPos, totalNeg]); // Run only once when the component mounts  */
+
 
   const handleLogout = async () => {
     try {
@@ -75,30 +113,7 @@ if(userId){
       alert('An error occurred while logging out.');
     }
 
-/*     //POTENTIAL TIME FUNCTION
-    useEffect(() => {
-      // Function to check the time and perform action if it's a new day
-      const checkTimeAndPerformAction = () => {
-        const now = new Date();
-        const currentHour = now.getHours();
-        const currentDay = now.getDate().toString();
-  
-        // Check if it's the top of the hour and a new day
-        if (currentHour === 0 && currentDay !== localStorage.getItem('lastCheckedDay')) {
-          // Perform your action here
-          console.log("It's a new day!");
-        
-        // Store the current day to localStorage to track it
-        localStorage.setItem('lastCheckedDay', currentDay.toString());
-      }
-    };
 
-    // Run the check every minute
-    const intervalId = setInterval(checkTimeAndPerformAction, 6); // Check every minute
-
-    // Clear the interval when the component unmounts
-    return () => clearInterval(intervalId);
-  }, []); // Run only once when the component mounts  */
    
 
 
@@ -131,8 +146,8 @@ if(userId){
           <p className='beans'>Total Sum </p>
           <p className='one'>{totalSum}</p>
        </div>
-       
-       <IonButton className='total' onClick={() => pushAllTotals(totalSum, totalPos, totalNeg, userId)}>SUBMIT DAILY TOTALS</IonButton>
+      
+       {/* <IonButton className='total' onClick={() => pushAllTotals(totalSum, totalPos, totalNeg, userId)}>SUBMIT DAILY TOTALS</IonButton> */}
 
       </IonContent>
     </IonPage>
