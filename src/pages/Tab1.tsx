@@ -151,7 +151,7 @@ const Tab1: React.FC = () => {
        {/* <IonButton className='total' onClick={() => pushAllTotals(totalSum, totalPos, totalNeg, userId)}>SUBMIT DAILY TOTALS</IonButton> */}
 
       </IonContent>
-      <A /> 
+  
     </IonPage>
   );
 };
