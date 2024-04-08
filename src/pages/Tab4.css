@@ -1,0 +1,7 @@
+#myChart {
+    width: 100vw; /* Make the chart canvas fill the entire width of its container */
+    margin: 0 auto; /* Center the chart horizontally */
+    height: 100vh !important; /* Adjust this value as needed */
+    display: block;
+}
+

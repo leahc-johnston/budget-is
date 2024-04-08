@@ -12,6 +12,13 @@ import { firestore } from "../components/firebase";
 import { collection, addDoc, query, where } from "@firebase/firestore";
 
 
+
+const start = new Date();
+const startHour = start.getHours();
+const startDay = start.getDate().toString();
+
+localStorage.setItem('lastCheckedDay', start.toString()); //starting day
+
 const Tab1: React.FC = () => {
   const [totalSum, setTotalSum] = useState<number>(0);
   const [totalNeg, setTotalNeg] = useState<number>(0);
@@ -85,8 +92,8 @@ const Tab1: React.FC = () => {
 
         console.log("current day:", currentDay)
         console.log("currentHour:", currentHour)
-        const daysOld = 1; // Set the threshold for "old" data
-        deleteOldData(firestore, userId, daysOld);
+        //const daysOld = 1; // Set the threshold for "old" data
+        deleteOldData(firestore, userId);
         // Store the current day to localStorage to track it
         localStorage.setItem('lastCheckedDay', currentDay.toString());
       }

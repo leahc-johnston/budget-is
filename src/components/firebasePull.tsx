@@ -37,20 +37,20 @@ const fetchBalances = async (userId: string): Promise<{ id: string, balance: num
 };
 export {fetchBalances}
 
-const deleteOldData = async (firestoreDB: Firestore, userId: string, daysOld: number) => {
+const deleteOldData = async (firestoreDB: Firestore, userId: string) => {
     // Calculate the cutoff date
-    const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - daysOld);
+    //const cutoffDate = new Date();
+    //cutoffDate.setDate(cutoffDate.getDate() - daysOld);
     
     // Get the current day's date
-    const currentDate = new Date();
-    const currentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    //const currentDate = new Date();
+    //const currentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
     
     const collectionRef = collection(firestoreDB, 'balance');
     const q = query(
       collectionRef,
         where('userId', '==', userId), // Filter by the userId
-        where('timestamp', '<=', currentDay),
+        //where('timestamp', '<=', currentDay),
     );
   
     try {
