@@ -58,6 +58,11 @@ its not in a box, just slap an ID on it*/
     margin-right: 10%;
     margin-top: 1%;
     margin-bottom: 1%;
+
+}
+
+.inputBox{
+    padding-left: 20px;
 }
 
 /* Submit Number button */

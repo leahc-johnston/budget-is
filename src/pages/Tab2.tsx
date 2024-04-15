@@ -125,7 +125,7 @@ const Tab2: React.FC = () => {
 
                 
                 <form onSubmit={handleSubmit(onSubmit)} className='down'>
-                    <IonItem style={{width: '100%'}}>
+                    <IonItem className ='inputBox' style={{width: '100%'}}>
                         <IonInput
                             type="number"
                             step="any"

@@ -50,10 +50,6 @@ const App: React.FC = () => {
               <IonIcon icon={ellipse} />
               <IonLabel>Tab 2</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="tab3" href="/tab3">
-              <IonIcon icon={square} />
-              <IonLabel>Tab 3</IonLabel>
-            </IonTabButton>
             <IonTabButton tab="tab4" href="/tab4">
               <IonIcon icon={trendingUpSharp} />
               <IonLabel></IonLabel>
