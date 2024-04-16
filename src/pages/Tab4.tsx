@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { Chart, ChartData } from 'chart.js/auto';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { firestore } from '../components/firebase';
 import { useUser } from '../components/context';
 
@@ -20,7 +20,7 @@ const ChartComponent: React.FC = () => {
     const fetchData = async () => {
       if (!userId) return;
 
-      const q = query(collection(firestore, 'dailyTotals'), where('userId', '==', userId));
+      const q = query(collection(firestore, 'dailyTotals'), orderBy('timestamp', 'asc'), where('userId', '==', userId));
       try {
         const querySnapshot = await getDocs(q);
         const data: DailyTotal[] = querySnapshot.docs.map(doc => doc.data() as DailyTotal);
@@ -99,7 +99,7 @@ const ChartComponent: React.FC = () => {
           <IonTitle>Financial Data</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent fullscreen id="A">
         {chartData ? <canvas id="myChart"></canvas> : <p>Loading data...</p>}
       </IonContent>
     </IonPage>
@@ -107,3 +107,9 @@ const ChartComponent: React.FC = () => {
 };
 
 export default ChartComponent;
+
+
+//things we still need to fix;
+//1. delete function- being weird. 
+//2. chart displaying things together and not saying each thing new day
+//3. chart display only last 7 days. (modify function for different database 'dailyTotals')
