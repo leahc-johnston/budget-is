@@ -10,8 +10,11 @@ import {
 import { useHistory } from "react-router-dom";
 import { IonPage } from "@ionic/react";
 import { FirebaseError } from "firebase/app";
+import { useNavigate } from "react-router-dom";
+
 
 import "./signup.css";
+import { navigate } from "ionicons/icons";
 
 const Login: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -20,7 +23,7 @@ const Login: React.FC = () => {
   const [error, setError] = useState(""); // State to manage error messages
   const history = useHistory();
 
-  useEffect(() => {
+/*   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         history.push('/Tab1');
@@ -29,6 +32,16 @@ const Login: React.FC = () => {
 
     return () => unsubscribe();
   }, [history]);
+ */
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate('/Tab1', { replace: true }); // Navigate and replace the current entry in the history stack
+      }
+    });
+
+    return () => unsubscribe();
+  }, [navigate]);
 
   const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
