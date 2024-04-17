@@ -3,9 +3,11 @@ import { auth } from "../components/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  onAuthStateChanged
+  onAuthStateChanged,
+  setPersistence, 
+  browserSessionPersistence
 } from "firebase/auth";
-import { Redirect } from "react-router-dom"; // Import Redirect
+import { useHistory } from "react-router-dom";
 import { IonPage } from "@ionic/react";
 import { FirebaseError } from "firebase/app";
 
@@ -16,17 +18,16 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(""); // State to manage error messages
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage redirect
+  const history = useHistory();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsLoggedIn(true); // Set state instead of pushing to history
-      }
+        history.push('/Tab1');
+      
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [history]);
 
   const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,12 +35,15 @@ const Login: React.FC = () => {
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
+        window.location.reload();
       } else {
         await createUserWithEmailAndPassword(auth, email, password);
+        window.location.reload();
       }
     } catch (error) {
       let errorMessage = "An error occurred. Please try again."; // Default error message
     
+      // Check if the error is a FirebaseError
       if (error instanceof FirebaseError) {
         switch (error.code) {
           case "auth/invalid-email":
@@ -57,10 +61,12 @@ const Login: React.FC = () => {
           case "auth/user-not-found":
             errorMessage = "No user found with this email.";
             break;
+          // Add more cases as necessary
           default:
             errorMessage = error.message; // Use the Firebase error message as a fallback
         }
       } else if (error instanceof Error) {
+        // Handle non-Firebase errors that are still Error instances
         errorMessage = error.message;
       }
     
@@ -68,11 +74,8 @@ const Login: React.FC = () => {
       setEmail("");
       setPassword("");
     }
+    
   };
-
-  if (isLoggedIn) {
-    return <Redirect to="/Tab1" />;
-  }
 
   return (
     <IonPage>
