@@ -22,8 +22,9 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
         history.push('/Tab1');
-      
+      }
     });
 
     return () => unsubscribe();
