@@ -59,7 +59,7 @@ let totalSum : number;
 let totalPos: number;
 let totalNeg: number;
 
-const pushAllTotals = (totalSum: number, totalPos: number, totalNeg: number, userId: string) => {
+const pushAllTotals = async (totalSum: number, totalPos: number, totalNeg: number, userId: string) => {
     console.log(userId);
     pushTotals({userId: userId, dailySum : totalSum});
     pushPositives({userId: userId, dailyDeposits : totalPos});

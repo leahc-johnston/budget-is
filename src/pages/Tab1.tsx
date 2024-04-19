@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import './Tab1.css';
-import { sumAllBalances, sumWithdrawl, sumDeposit, deleteOldData } from '../components/firebasePull';
+import { sumAllBalances, sumWithdrawl, sumDeposit, deleteOldData, deleteOldTotals } from '../components/firebasePull';
 import { pushTotals, pushPositives, pushNegatives, pushAllTotals } from '../components/firebasePush';
 import { useUser } from '../components/context'; // Ensure this path is correctly pointing to where your context is defined
 import { signOut } from 'firebase/auth';
@@ -16,8 +16,7 @@ import { collection, addDoc, query, where } from "@firebase/firestore";
 const start = new Date();
 const startHour = start.getHours();
 const startDay = start.getDate().toString();
-
-localStorage.setItem('lastCheckedDay', start.toString()); //starting day
+localStorage.setItem('lastCheckedDay', startDay); //starting day
 
 const Tab1: React.FC = () => {
   const [totalSum, setTotalSum] = useState<number>(0);
@@ -76,30 +75,36 @@ const Tab1: React.FC = () => {
   //POTENTIAL TIME FUNCTION
   useEffect(() => {
     // Function to check the time and perform action if it's a new day
-    const checkTimeAndPerformAction = () => {
+    const checkTimeAndPerformAction = async () => {
       const now = new Date();
       const currentHour = now.getHours();
       const currentDay = now.getDate().toString();
       const { totalSum, totalPos, totalNeg } = parameters;
       // Check if it's the top of the hour and a new day
-      if (/*currentHour === 0 && */currentDay !== localStorage.getItem('lastCheckedDay')) {
-        // Perform your action here
+      if (/*currentHour === 0 && */currentDay !== localStorage.getItem('lastCheckedDay')) 
+      {
         console.log("It's a new day!");
-        console.log(totalSum)
-        console.log(totalPos)
-        console.log(totalNeg)
-        pushAllTotals(totalSum, totalPos, totalNeg, userId);
-
+        console.log("current total sum: ", totalSum);
+        console.log("current total deposit: ", totalPos);
+        console.log("current total withdrawal: ", totalNeg);
+        await pushAllTotals(totalSum, totalPos, totalNeg, userId);
+        
+        setTotalNeg(0);
+        setTotalPos(0);
+        setTotalSum(0);
+        window.location.reload;
         console.log("current day:", currentDay)
-        console.log("currentHour:", currentHour)
-        //const daysOld = 1; // Set the threshold for "old" data
-        deleteOldData(firestore, userId);
-        // Store the current day to localStorage to track it
         localStorage.setItem('lastCheckedDay', currentDay.toString());
+        console.log("The new day is: ", currentDay);
+        console.log("Value saved: ", localStorage.getItme('lastCheckedDay'));
+       // window.location.reload();
       }
-      else
+      else{
         console.log("Not a new day");
+        console.log("The day is currently: ", now.getDate());
+      }
     };
+  
     const parameters = { totalSum, totalPos, totalNeg };
     // Run the check every minute
     const intervalId = setInterval(checkTimeAndPerformAction, 6); // Check every minute

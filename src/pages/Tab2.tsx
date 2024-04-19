@@ -6,12 +6,18 @@ import './Tab2.css';
 import { pushNumber } from '../components/firebasePush';
 import { useUser } from "../components/context";
 
+const start = new Date();
+const startHour = start.getHours();
+const startDay = start.getDate().toString();
+localStorage.setItem('lastCheckedDayTab2', startDay); //starting day
+
 const Tab2: React.FC = () => {
     const { register, handleSubmit, setValue, watch, reset } = useForm();
     const [transactionType, setTransactionType] = useState<string>('deposit');
     const [numbers, setNumbers] = useState<{ id: string, balance: number }[]>([]);
     const [editId, setEditId] = useState<string | null>(null); // for identifying transaction being edited
     const { userId } = useUser();
+    const [count, setCount] = useState(0);
     const contentRef = useRef<HTMLIonContentElement>(null);
     useEffect(() => {
         // Calculate the height of the content
@@ -81,6 +87,21 @@ const Tab2: React.FC = () => {
             setNumbers(fetchedNumbers);
         }
     };
+    useEffect(() => {
+        // This code will run after every render
+        const now = new Date();
+        const currentHour = now.getHours();
+        const currentDay = now.getDate().toString();
+        if (/*currentHour === 0 && */currentDay !== localStorage.getItem('lastCheckedDayTab2')) 
+        {
+            window.location.reload;
+            localStorage.setItem('lastCheckedDayTab2', currentDay);
+        }
+      }, [count]); // The effect will re-run whenever `count` changes
+    
+      const incrementCount = () => {
+        setCount(prevCount => prevCount + 1);
+      };
 
     return (
         <IonPage>
@@ -124,6 +145,7 @@ const Tab2: React.FC = () => {
                     {numbers.map(({ id, balance }) => (
                         <IonItem key={id}>
                             <IonLabel>{balance}</IonLabel>
+                            
                             <IonButton onClick={() => startEditing(id, balance)}>Edit</IonButton>
                         </IonItem>
                     ))}

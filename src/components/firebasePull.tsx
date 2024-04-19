@@ -3,6 +3,8 @@ import { collection, getDocs, query, where, deleteDoc, Firestore} from "@firebas
 import { firestore } from "../components/firebase";
 import { addDoc, doc, updateDoc,  } from "firebase/firestore";
 import { useUser } from "./context";
+import { isSameDay } from 'date-fns';
+import { Timestamp } from 'firebase/firestore';
 
 
 
@@ -19,8 +21,18 @@ export type BalanceData = {
 
 // Function to retrieve numbers from Firebase
 const fetchBalances = async (userId: string): Promise<{ id: string, balance: number }[]> => {
+    
     const balanceCollection = collection(firestore, "balance"); // Reference to 'balance' collection
-    const q = query(balanceCollection, where("userId", "==", userId)); // Updated to use "userId"
+        // Get the current timestamp
+    const currentTimestamp = Timestamp.now();
+
+        // Calculate the start and end of the current day
+    const startOfToday = new Date(currentTimestamp.seconds * 1000);
+    startOfToday.setHours(0, 0, 0, 0); // Set hours to 00:00:00
+    const endOfToday = new Date(currentTimestamp.seconds * 1000);
+    endOfToday.setHours(23, 59, 59, 999); // Set hours to 23:59:59.999
+    const q = query(balanceCollection, where("userId", "==", userId),  where("timestamp", ">=", startOfToday),
+    where("timestamp", "<=", endOfToday)); // Updated to use "userId"
 
     try {
         const querySnapshot = await getDocs(q);
@@ -73,6 +85,53 @@ const deleteOldData = async (firestoreDB: Firestore, userId: string) => {
     }
   };
 
+  const deleteOldTotals = async (firestoreDB: Firestore, userId: string) => {
+    // Calculate the cutoff date
+    //const cutoffDate = new Date();
+    //cutoffDate.setDate(cutoffDate.getDate() - daysOld);
+    
+    // Get the current day's date
+    const currentDate = new Date();
+    const sevenDays = new Date(currentDate);
+    sevenDays.setDate(currentDate.getDate() -7);
+    //const cut = cutoff.toDate();
+    //const currentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    
+    const collectionRef = collection(firestoreDB, 'dailyTotals');
+    const a = query(
+      collectionRef,
+        where('userId', '==', userId), 
+ 
+        // Filter by the userId
+        //where('timestamp', '<=', currentDay),
+    );
+  
+    try {
+      const querySnapshot = await getDocs(a);
+  
+      // Iterate over each document
+      querySnapshot.forEach((document) => {
+        //const dateTimestamp = document.timestamp().toDate(); // Assuming 'date' is a Timestamp field
+        //const documentDate = dateTimestamp.toDate(); // Convert Timestamp to Date
+        const data = document.data();
+        const docTime = data.timestamp;
+        const date = docTime.toDate();
+        console.log(date.getTime());
+        console.log(sevenDays.getTime())
+        if(date.getTime() <= sevenDays.getTime())
+        // Check if the document's date is not equal to the current day's date
+        //if (documentDate < currentDay) {
+          // Delete the document
+          deleteDoc(doc(firestoreDB, 'dailyTotals', document.id));
+          console.log('Deleted some old data');
+        });
+  
+      console.log('Old data tied to the userId has been successfully deleted.');
+    } catch (error) {
+      console.error('Error deleting old data: ', error);
+    }
+  };
+
 /* const deleteOldData = async (firestoreDB: Firestore, userId: string, daysOld: number) => {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - daysOld);
@@ -97,7 +156,7 @@ const deleteOldData = async (firestoreDB: Firestore, userId: string) => {
       console.error('Error deleting old data: ', error);
     }
   }; */
-export { deleteOldData}
+export { deleteOldData, deleteOldTotals}
 
 
 const sumAllBalances = async (userId: string): Promise<number> => {
@@ -114,6 +173,8 @@ const sumAllBalances = async (userId: string): Promise<number> => {
         // Sum balance values for documents that match the userId
         querySnapshot.forEach(doc => {
             const balance = doc.data().balance;
+            const timestamp = doc.data().timestamp;
+            if(isSameDay(timestamp.toDate(), new Date()))
             if (typeof balance === 'number') { // Make sure balance is a number
                 sum += balance;
             }
@@ -143,8 +204,11 @@ const sumWithdrawl = async (userId: string): Promise<number> => {
         // Sum negative balance values for documents that match the userId
         querySnapshot.forEach(doc => {
             const balance = doc.data().balance;
-            if (typeof balance === 'number' && balance < 0) { // Check if balance is a negative number
-                sumNeg += balance;
+            const timestamp = doc.data().timestamp;
+            if(isSameDay(timestamp.toDate(), new Date())){
+                if (typeof balance === 'number' && balance < 0) { // Check if balance is a negative number
+                    sumNeg += balance;
+                }
             }
         });
 
@@ -172,8 +236,11 @@ const sumDeposit = async (userId: string): Promise<number> => {
         // Sum positive balance values for documents that match the userId
         querySnapshot.forEach(doc => {
             const balance = doc.data().balance;
-            if (typeof balance === 'number' && balance >= 0) { // Check if balance is a positive number
-                sumPos += balance;
+            const timestamp = doc.data().timestamp;
+            if(isSameDay(timestamp.toDate(), new Date())){
+                if (typeof balance === 'number' && balance >= 0) { // Check if balance is a positive number
+                    sumPos += balance;
+                }
             }
         });
 
