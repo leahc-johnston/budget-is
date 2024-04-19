@@ -106,6 +106,8 @@ const ChartComponent: React.FC = () => {
           type: 'bar',
           data: chartData,
           options: {
+            responsive: true, 
+            maintainAspectRatio: false,
             scales: {
               y: {
                 beginAtZero: true,
@@ -125,7 +127,7 @@ const ChartComponent: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen id="A">
-        {chartData ? <canvas id="myChart"></canvas> : <p>Loading data...</p>}
+          {chartData ? <canvas id="myChart"></canvas> : <p>Loading data...</p>}  
       </IonContent>
     </IonPage>
   );
