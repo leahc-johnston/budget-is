@@ -9,6 +9,8 @@ import {
 } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import { IonPage } from "@ionic/react";
+import { FirebaseError } from "firebase/app";
+
 import "./signup.css";
 
 const Login: React.FC = () => {
@@ -40,12 +42,40 @@ const Login: React.FC = () => {
         window.location.reload();
       }
     } catch (error) {
-      // Catch and set the error message
-      setError("Invalid credentials");
-      // Clear the input fields
+      let errorMessage = "An error occurred. Please try again."; // Default error message
+    
+      // Check if the error is a FirebaseError
+      if (error instanceof FirebaseError) {
+        switch (error.code) {
+          case "auth/invalid-email":
+            errorMessage = "Invalid Credentials.";
+            break;
+          case "auth/weak-password":
+            errorMessage = "The password is too weak.";
+            break;
+          case "auth/email-already-in-use":
+            errorMessage = "The email is already in use by another account.";
+            break;
+          case "auth/wrong-password":
+            errorMessage = "Invalid Credentials.";
+            break;
+          case "auth/user-not-found":
+            errorMessage = "No user found with this email.";
+            break;
+          // Add more cases as necessary
+          default:
+            errorMessage = error.message; // Use the Firebase error message as a fallback
+        }
+      } else if (error instanceof Error) {
+        // Handle non-Firebase errors that are still Error instances
+        errorMessage = error.message;
+      }
+    
+      setError(errorMessage);
       setEmail("");
       setPassword("");
     }
+    
   };
 
   return (
