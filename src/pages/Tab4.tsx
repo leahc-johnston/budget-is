@@ -128,8 +128,16 @@ const ChartComponent: React.FC = () => {
       </IonHeader>
       <IonContent fullscreen id="A">
           {chartData ? <canvas id="myChart"></canvas> : <p>Loading data...</p>}  
+
       </IonContent>
+      <div>&nbsp;</div>
+      <div>&nbsp;</div>
+      <div>&nbsp;</div>
+      <div>&nbsp;</div>
+
     </IonPage>
+    
+    
   );
 };
 

@@ -47,3 +47,28 @@ input::placeholder{
     color: black;
   }
 
+/* signup.css */
+
+.google-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+    color: black;
+    margin-top: -50px;
+  }
+  
+  .google-login img {
+    margin-right: 8px; /* Space between the image and text */
+  }
+  
+  .google-login:hover {
+    background-color: #f1f1f1; /* Light gray hover effect */
+  }
+  

@@ -4,14 +4,14 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
-  setPersistence, 
-  browserSessionPersistence
+  GoogleAuthProvider,
+  signInWithPopup, // To initiate Google sign-in
+  setPersistence,
+  browserSessionPersistence,
 } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import { IonPage } from "@ionic/react";
 import { FirebaseError } from "firebase/app";
-
-
 import "./signup.css";
 
 const Login: React.FC = () => {
@@ -24,7 +24,7 @@ const Login: React.FC = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        history.push('/Tab1');
+        history.push("/Tab1");
       }
     });
 
@@ -44,7 +44,7 @@ const Login: React.FC = () => {
       }
     } catch (error) {
       let errorMessage = "An error occurred. Please try again."; // Default error message
-    
+
       // Check if the error is a FirebaseError
       if (error instanceof FirebaseError) {
         switch (error.code) {
@@ -68,15 +68,25 @@ const Login: React.FC = () => {
             errorMessage = error.message; // Use the Firebase error message as a fallback
         }
       } else if (error instanceof Error) {
-        // Handle non-Firebase errors that are still Error instances
-        errorMessage = error.message;
+        errorMessage = error.message; // Handle non-Firebase errors that are still Error instances
       }
-    
+
       setError(errorMessage);
       setEmail("");
       setPassword("");
     }
-    
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      history.push("/Tab1"); // Redirect after successful login
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        setError(error.message);
+      }
+    }
   };
 
   return (
@@ -89,20 +99,37 @@ const Login: React.FC = () => {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
           required
-        /><br/><br/>
+        />
+        <br />
+        <br />
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           required
-        /><br/><br/>
-        <button className="chip" type="submit">{isLogin ? "Login" : "Sign Up"}</button>
+        />
+        <br />
+        <br />
+        <button className="chip" type="submit">
+          {isLogin ? "Login" : "Sign Up"}
+        </button>
       </form>
-      {error && <div style={{ color: 'red', textAlign: 'center' }}>{error}</div>}
+      {error && (
+        <div style={{ color: "red", textAlign: "center" }}>{error}</div>
+      )}
       <button className="legally" onClick={() => setIsLogin(!isLogin)}>
         {isLogin ? "Switch to Sign Up" : "Switch to Login"}
       </button>
+      
+      {/* Google-style login button */}
+      <button className="google-login" onClick={handleGoogleLogin}>
+        <img src="resources\icons8-google-48.png" alt="Google" /> Login with Google
+      </button>
+
+      <div>&nbsp;</div>
+    
+
     </IonPage>
   );
 };
