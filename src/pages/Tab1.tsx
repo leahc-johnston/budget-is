@@ -146,12 +146,11 @@ const Tab1: React.FC = () => {
       <IonContent fullscreen ref={contentRef}>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Tab 2</IonTitle> {/* Same here regarding the title */}
+            <IonTitle className="title">Daily Totals</IonTitle> {/* Same here regarding the title */}
           </IonToolbar>
         </IonHeader>
         {/* Display the total sum of balances */}
         <div>
-          <h2 className='work'>Total Sum of Balances:</h2>
           <p className='beans'>Total Deposits </p>
           <p className='one'>{totalPos}</p>
           <p className='beans'>Total Withdrawal</p>

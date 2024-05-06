@@ -1,5 +1,11 @@
+.title { 
+    background-color: #8595bc;
+    padding-top: 20px;
+    padding-bottom: 20px;	
+}
+
 .work{
-    background-color: rgb(83, 164, 95);
+    background-color: #8595bc;
     color:black;
     text-align: center;
     margin-left: 15%;
@@ -7,16 +13,16 @@
     font-size:xx-large;
 }
 .beans{
-    background-color: rgb(83, 164, 95);
     color:black;
     text-align: center;
     margin-left: 25%;
     margin-right: 25%;
     font-size: x-large;
+    border-bottom: solid black;
 }
 .one{
-    background-color:#206b52 ;
-    color:rgb(188, 184, 184);
+    background-color: #0066ff;
+    color: white;
     text-align: center;
     margin-left: 35%;
     margin-right: 35%;

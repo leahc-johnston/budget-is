@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "../components/firebase";
+import { app, auth } from "../components/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -8,11 +8,17 @@ import {
   signInWithPopup, // To initiate Google sign-in
   setPersistence,
   browserSessionPersistence,
+  initializeAuth,
+  getAuth,
+  setPersistence, 
+  indexedDBLocalPersistence
+
 } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import { IonPage } from "@ionic/react";
 import { FirebaseError } from "firebase/app";
 import "./signup.css";
+import { isPlatform } from "@ionic/vue";
 
 const Login: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -20,6 +26,8 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(""); // State to manage error messages
   const history = useHistory();
+
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -35,8 +43,11 @@ const Login: React.FC = () => {
     e.preventDefault();
     setError(""); // Clear previous errors
     try {
-      if (isLogin) {
+      if (isLogin) { 
         await signInWithEmailAndPassword(auth, email, password);
+	history.push("/Tab1");
+	/*if(user)
+		history.push("/Tab1");*/
         window.location.reload();
       } else {
         await createUserWithEmailAndPassword(auth, email, password);
@@ -122,10 +133,7 @@ const Login: React.FC = () => {
         {isLogin ? "Switch to Sign Up" : "Switch to Login"}
       </button>
       
-      {/* Google-style login button */}
-      <button className="google-login" onClick={handleGoogleLogin}>
-        <img src="resources\icons8-google-48.png" alt="Google" /> Login with Google
-      </button>
+
 
       <div>&nbsp;</div>
     

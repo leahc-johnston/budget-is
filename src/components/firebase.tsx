@@ -1,6 +1,8 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { Firestore, getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+//import { getAuth, Auth } from "firebase/auth";
+import { initializeAuth, getAuth, setPersistence, indexedDBLocalPersistence, Auth } from "firebase/auth";
+import { isPlatform } from "@ionic/vue";
 
 type FirebaseConfig = {
   apiKey: string | undefined;
@@ -26,6 +28,8 @@ const app: FirebaseApp = initializeApp(firebaseConfig);
 export const firestore: Firestore = getFirestore(app);
 export const db: Firestore = getFirestore(app); // Export Firestore instance as `db`
 
-const auth = getAuth(app);
+
+const auth = initializeAuth(app, {persistence: indexedDBLocalPersistence})
+
 
 export { app, auth, Firestore }; // Export Firestore type as well
